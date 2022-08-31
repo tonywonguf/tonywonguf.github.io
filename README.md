@@ -1,2 +1,2 @@
-# SpicyWongBoy.github.io
+# tonywong.me
 my personal website
