@@ -2,5 +2,7 @@ blurb {
     background-color: beige;
 }
 body {
-    background: linear-gradient(to bottom, transparent, mistyrose), url("suave_tony.jpeg")
+    background: linear-gradient(to bottom, transparent, mistyrose), url("suave_tony.jpeg");
+    background-position: auto;
+    background-repeat: no-repeat;
 }
