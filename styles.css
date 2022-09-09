@@ -1,10 +1,18 @@
-blurb {
-    background-color: beige;
-}
+
+
 body {
-    background: linear-gradient(to bottom, transparent, mistyrose), url("suave_tony.jpeg");
-    height: 100%;
-    background-position: auto;
-    background-repeat: no-repeat;
-    background-size: 50%;
+    background: linear-gradient(to bottom, #bdc3c7, #2c3e50ca);
+}
+
+h1 {
+    text-align: center;
+}
+
+.blurb {
+    margin-left: 10%;
+    font-size: 30px;
+}
+
+footer{
+    margin-top: 100%;
 }
