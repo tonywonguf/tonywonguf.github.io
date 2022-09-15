@@ -1,0 +1,22 @@
+{
+  "name": "tonywonguf.github.io",
+  "version": "1.0.0",
+  "description": "Personal Website",
+  "main": "refactor.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tonywonguf/tonywonguf.github.io.git"
+  },
+  "author": "Tony Wong",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/tonywonguf/tonywonguf.github.io/issues"
+  },
+  "homepage": "https://github.com/tonywonguf/tonywonguf.github.io#readme",
+  "devDependencies": {
+    "sass": "^1.54.9"
+  }
+}
