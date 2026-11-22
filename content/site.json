@@ -20,6 +20,7 @@
   "projects": {
     "recentDays": 120,
     "exclude": [
+      "tonywonguf.github.io",
       "Lab_5",
       "UFPT",
       "Archived-Code-CP",
