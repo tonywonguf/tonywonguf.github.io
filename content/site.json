@@ -4,7 +4,7 @@
   "intro": "I am an engineer. I build local AI and agent tools for Linux, mostly in Rust.",
   "links": {
     "github": "https://github.com/tonywonguf",
-    "linkedin": null
+    "linkedin": "https://www.linkedin.com/in/tony-wong-uf"
   },
   "now": [
     "Voice input on Linux: tools that type dictated text on Wayland, and a signal on the screen when the microphone is on.",
