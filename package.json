@@ -1,0 +1,13 @@
+{
+  "name": "personal-site",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node src/build.mjs",
+    "build:offline": "node src/build.mjs --offline",
+    "test": "node --test test/*.test.mjs"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

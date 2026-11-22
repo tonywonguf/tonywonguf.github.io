@@ -1,0 +1,35 @@
+{
+  "name": "Tony Wong",
+  "githubUser": "tonywonguf",
+  "intro": "I make small, fast tools for Linux, local AI models, and voice input. Most of my code is Rust.",
+  "links": {
+    "github": "https://github.com/tonywonguf",
+    "linkedin": null
+  },
+  "now": [
+    "Voice input on Linux: tools that type dictated text on Wayland, and a signal on the screen when the microphone is on.",
+    "Ports of machine learning models to pure Rust, so that they operate without Python.",
+    "Learning Vim, one hint at a time."
+  ],
+  "ai": [
+    "I write code with Claude Code. Several sessions work at the same time. Each session takes one task from a shared task board, and I examine the result before I accept it.",
+    "I operate small models on my own computer for dictation and for text classification. The data stays on the computer.",
+    "I use AI to read new open-source projects and tell me what they do, and to write documentation in plain English.",
+    "An agent does not publish, send, or delete without my approval."
+  ],
+  "projects": {
+    "recentDays": 120,
+    "exclude": [
+      "Lab_5",
+      "UFPT",
+      "Archived-Code-CP",
+      "Personal-Projects",
+      "CaSMM",
+      "Creatorverse"
+    ],
+    "blurbs": {
+      "griffin_game": "A web game about the Angel Problem of John Conway. Made at HackHarvard 2022.",
+      "NextAnime": "An anime web app made with Next.js by a team of three."
+    }
+  }
+}

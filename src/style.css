@@ -1,0 +1,211 @@
+/* The page is a tiled desktop: each part is a window with a title bar.
+   The window with keyboard focus gets the accent title bar, like a tiling window manager. */
+
+@font-face {
+  font-family: "Schibsted Grotesk";
+  src: url("fonts/schibsted-grotesk.woff2") format("woff2");
+  font-weight: 400 900;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Schibsted Grotesk";
+  src: url("fonts/schibsted-grotesk-italic.woff2") format("woff2");
+  font-weight: 400 900;
+  font-style: italic;
+  font-display: swap;
+}
+
+:root {
+  --desk: #cdd4dc;
+  --tile: #f8f9fa;
+  --ink: #18202b;
+  --muted: #586577;
+  --bar: #e3e8ee;
+  --bar-ink: #3c4756;
+  --accent: #1f6f64;
+  --accent-ink: #f2fbf9;
+  --link: #175c53;
+  --gap: 6px;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --desk: #0d1116;
+    --tile: #171c23;
+    --ink: #e4e8ee;
+    --muted: #97a3b2;
+    --bar: #222932;
+    --bar-ink: #aeb8c5;
+    --accent: #3fa796;
+    --accent-ink: #08201c;
+    --link: #74d1c1;
+    color-scheme: dark;
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+html {
+  background: var(--desk);
+}
+body {
+  margin: 0;
+  padding: var(--gap);
+  min-height: 100vh;
+  background: var(--desk);
+  color: var(--ink);
+  font:
+    400 1.0625rem/1.55 "Schibsted Grotesk",
+    system-ui,
+    sans-serif;
+}
+
+.desk {
+  display: grid;
+  gap: var(--gap);
+  grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+  grid-template-areas:
+    "hero    now"
+    "ai      builds"
+    "earlier builds";
+  max-width: 78rem;
+  margin: 0 auto;
+}
+.tile-hero {
+  grid-area: hero;
+}
+.tile-now {
+  grid-area: now;
+}
+.tile-ai {
+  grid-area: ai;
+}
+.tile-builds {
+  grid-area: builds;
+}
+.tile-earlier {
+  grid-area: earlier;
+}
+
+.tile {
+  background: var(--tile);
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.bar {
+  margin: 0;
+  padding: 0.2rem 0.75rem;
+  background: var(--bar);
+  color: var(--bar-ink);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+}
+.tile-hero .bar,
+.tile:focus-within .bar {
+  background: var(--accent);
+  color: var(--accent-ink);
+}
+.desk:focus-within .tile-hero:not(:focus-within) .bar {
+  background: var(--bar);
+  color: var(--bar-ink);
+}
+.body {
+  padding: 1.25rem 1.5rem 1.5rem;
+}
+
+h1 {
+  margin: 0.5rem 0 0.75rem;
+  font-size: clamp(3rem, 9vw, 6.5rem);
+  font-weight: 800;
+  line-height: 0.92;
+  letter-spacing: -0.035em;
+}
+.intro {
+  max-width: 34ch;
+  margin: 0 0 1.25rem;
+  font-size: 1.3rem;
+  line-height: 1.4;
+  color: var(--ink);
+}
+.links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.25rem;
+  font-weight: 600;
+}
+
+a {
+  color: var(--link);
+  text-underline-offset: 0.18em;
+  text-decoration-thickness: 1px;
+}
+a:hover {
+  text-decoration-thickness: 2px;
+}
+a:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+.plain {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.plain > li {
+  max-width: 62ch;
+}
+.plain > li + li {
+  margin-top: 0.75rem;
+}
+.tile-now .plain > li,
+.tile-ai .plain > li {
+  padding-left: 1rem;
+  border-left: 2px solid var(--bar);
+}
+
+.project h3 {
+  margin: 0;
+  font-size: 1.125rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+.project p {
+  margin: 0.15rem 0 0;
+}
+.project .meta {
+  color: var(--muted);
+  font-size: 0.875rem;
+}
+.projects > li + li {
+  margin-top: 1.1rem;
+}
+
+.foot {
+  max-width: 78rem;
+  margin: 0 auto;
+  padding: 0.75rem 0.25rem 1rem;
+  color: var(--muted);
+  font-size: 0.875rem;
+}
+.foot p {
+  margin: 0;
+}
+
+@media (max-width: 52rem) {
+  .desk {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas: "hero" "now" "builds" "ai" "earlier";
+  }
+  .body {
+    padding: 1rem 1.1rem 1.25rem;
+  }
+  .intro {
+    font-size: 1.15rem;
+  }
+}
