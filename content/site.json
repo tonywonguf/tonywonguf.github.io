@@ -9,7 +9,6 @@
   "now": [
     "Voice input on Linux: tools that type dictated text on Wayland, and a signal on the screen when the microphone is on.",
     "Ports of machine learning models to pure Rust, so that they operate without Python.",
-    "Learning Vim, one hint at a time."
   ],
   "ai": [
     "I write code with Claude Code. Several sessions work at the same time. Each session takes one task from a shared task board, and I examine the result before I accept it.",
