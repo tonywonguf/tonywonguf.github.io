@@ -407,6 +407,10 @@ body {
   display: flex;
   align-items: center;
   gap: 1rem;
+  /* The controls go up into the bottom padding of the track, which gives the cover shadow room.
+     They need their own layer, or the track covers them. */
+  position: relative;
+  z-index: 1;
   margin-top: -1.75rem;
 }
 .nav {
