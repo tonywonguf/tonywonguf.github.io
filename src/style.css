@@ -127,15 +127,9 @@ a:hover {
 
 /* First screen */
 .hero {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  grid-template-areas: "text agent";
-  gap: 1rem 3rem;
-  align-items: center;
   padding-block: clamp(2.5rem, 9vh, 6rem) clamp(2.5rem, 7vh, 4.5rem);
 }
 .hero-text {
-  grid-area: text;
   min-width: 0;
 }
 h1 {
@@ -197,19 +191,6 @@ h1 {
   white-space: nowrap;
 }
 
-/* The little agent. Its eyes follow the pointer after the page loads. */
-.agent {
-  grid-area: agent;
-  margin: 0;
-  font: clamp(0.75rem, 1.6vw, 1.4rem)/1.15 var(--mono);
-  color: var(--muted);
-  user-select: none;
-  white-space: pre;
-}
-.agent .eye {
-  color: var(--accent);
-}
-
 /* Sections */
 .part {
   padding-block: clamp(2.5rem, 6vw, 4rem);
@@ -238,65 +219,231 @@ h2 {
   color: var(--muted);
 }
 
-/* Project cards */
-.cards {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(min(100%, 24rem), 1fr));
-  gap: 1rem;
-  margin: 0;
-  padding: 0;
-  list-style: none;
+/* Project carousel. The track is a scroll container with snap points.
+   The slides at the side are smaller and dim. Only transform and opacity change, so the browser does not do the layout again. */
+body {
+  overflow-x: clip;
 }
-.card {
+.carousel {
+  --gut: max(clamp(1rem, 4vw, 2.5rem), calc(50vw - var(--wrap) / 2 + 2.5rem));
+}
+.track {
   position: relative;
   display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-  padding: 1.25rem 1.25rem 1.1rem;
-  background: var(--card);
-  border: 1px solid var(--line);
-  border-radius: 10px;
-  transition: border-color 0.15s;
+  gap: clamp(0.75rem, 2.5vw, 2rem);
+  margin-inline: calc(50% - 50vw);
+  padding: 0.5rem var(--gut) 1.5rem;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-padding-inline: var(--gut);
+  scrollbar-width: none;
+  overscroll-behavior-x: contain;
 }
-.card:hover,
-.card:focus-within {
-  border-color: var(--accent);
+.track::-webkit-scrollbar {
+  display: none;
 }
-.card-top {
-  display: flex;
-  justify-content: space-between;
-  font: 0.8125rem var(--mono);
-  color: var(--muted);
+@media (prefers-reduced-motion: no-preference) {
+  .track {
+    scroll-behavior: smooth;
+  }
 }
-.card h3 {
-  margin: 0;
-  font-size: 1.375rem;
-  line-height: 1.2;
-  font-weight: 700;
-  letter-spacing: -0.01em;
-  overflow-wrap: anywhere;
+.slide {
+  flex: 0 0 min(86vw, 60rem);
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(1.25rem, 4vw, 3.5rem);
+  scroll-snap-align: start;
+  transform-origin: left center;
+  transition: transform 0.45s cubic-bezier(0.2, 0.7, 0.2, 1);
 }
-.card h3 a {
+/* The script adds the class "js". Without the script, all slides stay fully visible.
+   The text of a side slide is fully hidden, not dim, so no text has low contrast. */
+.js .slide:not(.on, :focus-within) {
+  transform: scale(0.94);
+}
+.js .slide:not(.on, :focus-within) .cover {
+  opacity: 0.45;
+}
+.info {
+  transition: opacity 0.35s;
+}
+.js .slide:not(.on, :focus-within) .info {
+  opacity: 0;
+}
+.cover {
+  position: relative;
+  display: block;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  border-radius: 22px;
   text-decoration: none;
+  color: #fff;
+  background: linear-gradient(
+    var(--a),
+    hsl(var(--h) 70% 56%),
+    hsl(calc(var(--h) - 40) 55% 24%)
+  );
+  box-shadow:
+    0 1px 0 rgb(255 255 255 / 0.25) inset,
+    0 24px 48px -28px rgb(0 0 0 / 0.55);
+  transform: perspective(70rem) rotateY(0deg);
+  transition:
+    transform 0.45s cubic-bezier(0.2, 0.7, 0.2, 1),
+    opacity 0.35s;
 }
-.card h3 a::after {
+.js .slide:not(.on, :focus-within) .cover {
+  transform: perspective(70rem) rotateY(9deg);
+}
+.slide.on .cover:hover {
+  transform: perspective(70rem) rotateY(-4deg) translateY(-4px);
+}
+/* Contour rings and a field of dots around one point. The point is different for each project. */
+.cover::before,
+.cover::after {
   content: "";
   position: absolute;
   inset: 0;
-  border-radius: inherit;
 }
-.card p {
+.cover::before {
+  background: repeating-radial-gradient(
+    circle at var(--x) var(--y),
+    transparent 0 26px,
+    rgb(255 255 255 / 0.2) 27px 28px
+  );
+  -webkit-mask: radial-gradient(circle at var(--x) var(--y), #000 10%, transparent 75%);
+  mask: radial-gradient(circle at var(--x) var(--y), #000 10%, transparent 75%);
+}
+.cover::after {
+  background: radial-gradient(circle, rgb(0 0 0 / 0.32) 1.6px, transparent 2px) 0 0 / 11px 11px;
+  -webkit-mask: linear-gradient(calc(var(--a) + 180deg), #000, transparent 65%);
+  mask: linear-gradient(calc(var(--a) + 180deg), #000, transparent 65%);
+}
+.cover-mark {
+  position: absolute;
+  z-index: 1;
+  left: 0.06em;
+  bottom: -0.2em;
+  font: 700 clamp(4rem, 13vw, 9.5rem) / 1 var(--mono);
+  letter-spacing: -0.06em;
+  color: rgb(255 255 255 / 0.92);
+  text-shadow: 0 2px 30px rgb(0 0 0 / 0.25);
+  white-space: nowrap;
+}
+.cover-lang {
+  position: absolute;
+  z-index: 1;
+  top: 1rem;
+  left: 1rem;
+  padding: 0.3rem 0.6rem;
+  border-radius: 99px;
+  background: rgb(0 0 0 / 0.38);
+  font: 0.75rem/1 var(--mono);
+  letter-spacing: 0.04em;
+  text-transform: lowercase;
+}
+.info {
+  min-width: 0;
+}
+.no {
   margin: 0;
+  font: 0.8125rem var(--mono);
+  letter-spacing: 0.06em;
+  color: var(--muted);
+}
+.info h3 {
+  margin: 0.4rem 0 0;
+  font-size: clamp(1.9rem, 4.4vw, 3.25rem);
+  line-height: 1;
+  font-weight: 700;
+  letter-spacing: -0.035em;
+  overflow-wrap: anywhere;
+}
+.info h3 a {
+  text-decoration: none;
+}
+.desc {
+  margin: 1rem 0 0;
+  max-width: 34rem;
   color: var(--muted);
   font-size: 1rem;
   line-height: 1.55;
 }
-.arrow {
-  transition: transform 0.15s;
+.info .tags {
+  margin-top: 1.1rem;
 }
-.card:hover .arrow {
-  transform: translate(2px, -2px);
+.go {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 1.4rem 0 0;
+}
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+  min-height: 44px;
+  padding: 0 1.1rem;
+  border-radius: 99px;
+  background: var(--ink);
+  color: var(--paper);
+  font: 600 0.9375rem var(--sans);
+  text-decoration: none;
+}
+.btn:hover {
+  background: var(--accent);
+  color: var(--paper);
+}
+.btn.ghost {
+  background: none;
+  color: var(--ink);
+  border: 1px solid var(--line);
+}
+.btn.ghost:hover {
+  border-color: var(--accent);
   color: var(--accent);
+}
+.controls {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 0.75rem;
+}
+.nav {
+  flex: none;
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  background: var(--card);
+  color: var(--ink);
+  font: 1.1rem/1 var(--mono);
+  cursor: pointer;
+}
+.nav:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+.pos {
+  margin: 0;
+  font: 0.875rem var(--mono);
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+.pos span {
+  color: var(--ink);
+}
+.bar {
+  flex: 1;
+  height: 2px;
+  background: var(--line);
+  overflow: hidden;
+}
+.bar span {
+  display: block;
+  height: 100%;
+  background: var(--accent);
+  transition: width 0.35s;
 }
 .tags {
   display: flex;
@@ -312,11 +459,6 @@ h2 {
   border: 1px solid var(--line);
   border-radius: 4px;
   color: var(--muted);
-}
-.tags a {
-  position: relative;
-  z-index: 1;
-  color: var(--accent);
 }
 
 /* Earlier work: one line each */
@@ -387,14 +529,12 @@ h2 {
 }
 
 @media (max-width: 46rem) {
-  .hero {
+  .slide {
     grid-template-columns: 1fr;
-    grid-template-areas: "agent" "text";
-    padding-top: 1.5rem;
+    align-items: start;
   }
-  .agent {
-    justify-self: end;
-    margin-bottom: -2.5rem;
+  .cover {
+    aspect-ratio: 16 / 10;
   }
   .rows li {
     grid-template-columns: 1fr auto;

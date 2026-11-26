@@ -1,8 +1,6 @@
 // Make the HTML page and llms.txt from the site text and the selected repositories.
 // This module does not read files or use the network, so the tests can call it directly.
 
-import { agentArt } from "./agent-art.mjs";
-
 export const esc = (s) =>
   String(s).replace(
     /[&<>"']/g,
@@ -34,17 +32,55 @@ const slug = (name) => "p-" + name.toLowerCase().replace(/[^a-z0-9]+/g, "-");
 const linkName = (name) =>
   name === "github" ? "GitHub" : name === "linkedin" ? "LinkedIn" : name;
 
-const card = (r, i, total) => `
-        <li class="card" id="${slug(r.name)}">
-          <div class="card-top"><span>${pad(i + 1)} / ${pad(total)}</span><span class="arrow" aria-hidden="true">&#8599;</span></div>
-          <h3><a href="${esc(r.url)}">${esc(r.name)}</a></h3>
-          ${r.description ? `<p>${esc(r.description)}</p>` : ""}
-          <ul class="tags" aria-label="Details">
-            ${r.language ? `<li>${esc(r.language)}</li>` : ""}
-            <li><time datetime="${r.pushed.toISOString().slice(0, 10)}">Updated ${month(r.pushed)}</time></li>
-            ${r.homepage ? `<li><a href="${esc(r.homepage)}">Live site</a></li>` : ""}
-          </ul>
-        </li>`;
+// A small number from the name, so each project gets the same cover at each build.
+const seed = (name) => {
+  let h = 2166136261;
+  for (const c of name) h = Math.imul(h ^ c.codePointAt(0), 16777619);
+  return h >>> 0;
+};
+// The base hue of the cover comes from the language.
+const hues = { Rust: 22, Go: 190, Python: 210, "C++": 330, C: 260, Shell: 120, Ruby: 355, JavaScript: 48, TypeScript: 215 };
+const coverStyle = (r) => {
+  const n = seed(r.name);
+  // Projects of one language stay near one hue, but each project moves it a little.
+  const hue = ((hues[r.language] ?? n % 360) + ((n >>> 4) % 120) - 60 + 360) % 360;
+  const x = 15 + (n % 70);
+  const y = 10 + ((n >>> 8) % 80);
+  const a = (n >>> 16) % 180;
+  return `--h:${hue};--x:${x}%;--y:${y}%;--a:${a}deg`;
+};
+// The big letters on the cover: the first part of the name, at most 6 characters.
+const mark = (name) => name.split(/[-_.]/)[0].slice(0, 6);
+
+const slide = (r, i, total) => `
+          <div class="slide${i === 0 ? " on" : ""}" id="${slug(r.name)}" role="group" aria-roledescription="slide" aria-label="${i + 1} of ${total}: ${esc(r.name)}">
+            <a class="cover" href="${esc(r.url)}" style="${coverStyle(r)}" tabindex="-1" aria-hidden="true">
+              <span class="cover-mark">${esc(mark(r.name))}</span>
+              <span class="cover-lang">${esc(r.language || "repo")}</span>
+            </a>
+            <div class="info">
+              <p class="no">N&#186; ${pad(i + 1)} / ${pad(total)}</p>
+              <h3><a href="${esc(r.url)}">${esc(r.name)}</a></h3>
+              ${r.description ? `<p class="desc">${esc(r.description)}</p>` : ""}
+              <ul class="tags" aria-label="Details">
+                ${r.language ? `<li>${esc(r.language)}</li>` : ""}
+                <li><time datetime="${r.pushed.toISOString().slice(0, 10)}">${month(r.pushed)}</time></li>
+              </ul>
+              <p class="go"><a class="btn" href="${esc(r.url)}">View project <span aria-hidden="true">&#8599;</span></a>${r.homepage ? ` <a class="btn ghost" href="${esc(r.homepage)}">Live site</a>` : ""}</p>
+            </div>
+          </div>`;
+
+const carousel = (items) => `
+        <div class="carousel" role="region" aria-roledescription="carousel" aria-label="Projects">
+          <div class="track" id="track" tabindex="0">${items.map((r, i) => slide(r, i, items.length)).join("")}
+          </div>
+          <div class="controls">
+            <button type="button" class="nav" id="prev" aria-label="Previous project">&#8592;</button>
+            <p class="pos" aria-live="polite"><span id="pos">01</span> / ${pad(items.length)}</p>
+            <div class="bar" aria-hidden="true"><span id="bar" style="width:${(100 / items.length).toFixed(2)}%"></span></div>
+            <button type="button" class="nav" id="next" aria-label="Next project">&#8594;</button>
+          </div>
+        </div>`;
 
 const row = (r) => `
           <li>
@@ -134,7 +170,6 @@ export function renderPage({ site, recent, earlier, now, css, script, fonts }) {
           <p>${ls || "(empty)"}</p>
         </div>
       </div>
-      <pre class="agent" id="agent" aria-hidden="true">${agentArt(1, 1, "open")}</pre>
     </section>
 
     <section class="part" id="work" aria-labelledby="t-work">
@@ -145,8 +180,7 @@ export function renderPage({ site, recent, earlier, now, css, script, fonts }) {
         </div>
         ${
           recent.length
-            ? `<ul class="cards">${recent.map((r, i) => card(r, i, recent.length)).join("")}
-        </ul>`
+            ? carousel(recent)
             : `<p>No public projects were updated recently. Older work is below.</p>`
         }${
           earlier.length
@@ -175,8 +209,7 @@ export function renderPage({ site, recent, earlier, now, css, script, fonts }) {
     <p>This page is built from my public GitHub repositories. Last build: ${day(now)}.</p>
     <p><a href="${esc(site.links.github)}/${esc(site.githubUser)}.github.io">Source</a> · <a href="llms.txt">llms.txt</a> (this page as plain text, for AI assistants)</p>
   </footer>
-  <script>const agentArt=${agentArt.toString().replace(/^function agentArt/, "function")};
-${script}</script>
+  <script>${script}</script>
 </body>
 </html>
 `;

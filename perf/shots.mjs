@@ -1,6 +1,6 @@
 // Screenshots of the built site at phone, tablet and desktop width, light and dark.
 // Usage: node perf/shots.mjs URL OUTDIR
-// It needs puppeteer-core and CHROME_PATH. It moves the pointer, so the agent looks to one side.
+// It needs puppeteer-core and CHROME_PATH. It also makes a screenshot of the project carousel.
 
 import puppeteer from "puppeteer-core";
 
@@ -41,9 +41,11 @@ for (const scheme of ["light", "dark"])
     await p.setViewport(vp);
     await p.goto(url, { waitUntil: "load" });
     await new Promise((r) => setTimeout(r, 800));
-    await p.mouse.move(vp.width * 0.15, vp.height * 0.9);
-    await new Promise((r) => setTimeout(r, 300));
     await p.screenshot({ path: `${out}/${name}-${scheme}.png` });
+    await p.evaluate(() => scrollTo(0, document.getElementById("work").offsetTop));
+    await new Promise((r) => setTimeout(r, 500));
+    await p.screenshot({ path: `${out}/${name}-${scheme}-work.png` });
+    await p.evaluate(() => scrollTo(0, 0));
     if (scheme === "light")
       await p.screenshot({ path: `${out}/${name}-full.png`, fullPage: true });
     const overflow = await p.evaluate(

@@ -83,7 +83,7 @@ const input = {
   earlier,
   now,
   css: minifyCss(await readFile(path("src/style.css"), "utf8")),
-  script: minifyJs(await readFile(path("src/agent.js"), "utf8")),
+  script: minifyJs(await readFile(path("src/carousel.js"), "utf8")),
   fonts,
 };
 
