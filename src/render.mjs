@@ -79,7 +79,6 @@ const carousel = (items) => `
           <div class="controls">
             <button type="button" class="nav" id="prev" aria-label="Previous project">&#8592;</button>
             <p class="pos" aria-live="polite"><span id="pos">01</span> / ${pad(items.length)}</p>
-            <div class="bar" aria-hidden="true"><span id="bar" style="width:${(100 / items.length).toFixed(2)}%"></span></div>
             <button type="button" class="nav" id="next" aria-label="Next project">&#8594;</button>
           </div>
         </div>`;

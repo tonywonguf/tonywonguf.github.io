@@ -259,8 +259,24 @@ body {
 }
 /* The script adds the class "js". Without the script, all slides stay fully visible.
    The text of a side slide is fully hidden, not dim, so no text has low contrast. */
-.js .slide:not(.on, :focus-within) {
-  transform: scale(0.94);
+/* With the script, the track does not scroll. The script moves each slide with a transform,
+   and the position wraps around (src/carousel.js). The body clips the slides off screen. */
+.js .track {
+  overflow: visible;
+  scroll-snap-type: none;
+  touch-action: pan-y;
+  cursor: grab;
+}
+.js .slide {
+  transition: none;
+  will-change: transform;
+}
+.drag .track {
+  cursor: grabbing;
+  user-select: none;
+}
+.drag .track a {
+  pointer-events: none;
 }
 .js .slide:not(.on, :focus-within) .cover {
   opacity: 0.45;
@@ -429,6 +445,7 @@ body {
   color: var(--accent);
 }
 .pos {
+  flex: 1;
   margin: 0;
   font: 0.875rem var(--mono);
   color: var(--muted);
@@ -436,18 +453,6 @@ body {
 }
 .pos span {
   color: var(--ink);
-}
-.bar {
-  flex: 1;
-  height: 2px;
-  background: var(--line);
-  overflow: hidden;
-}
-.bar span {
-  display: block;
-  height: 100%;
-  background: var(--accent);
-  transition: width 0.35s;
 }
 .tags {
   display: flex;

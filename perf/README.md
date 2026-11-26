@@ -8,7 +8,7 @@ The tools in this folder measure the site. The site does not use them, and the w
 |---|---|
 | `gate.mjs` | Serves `dist/` with gzip and runs Lighthouse on a simulated phone. It gives the median of each value and exits with 1 if a value is outside the budget. |
 | `shots.mjs` | Makes screenshots at phone, tablet and desktop width, in the light and the dark color scheme. |
-| `carouselcheck.mjs` | Makes sure that the arrow buttons and the arrow keys move the project carousel, and that the counter follows. |
+| `carouselcheck.mjs` | Makes sure that the project carousel loops and has no progress bar. It also makes sure that the buttons, the arrow keys, a mouse drag, a fast flick, a touch swipe and a horizontal wheel move it, and that reduced motion stops the glide. |
 | `remote.sh` | Copies `dist/` and `perf/` to the laptop (ssh host `gpu-node`) and runs one tool there. |
 
 ## Requirements

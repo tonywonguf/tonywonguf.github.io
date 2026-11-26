@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Copy dist/ and perf/ to the laptop (ssh host gpu-node) and run one perf tool there.
-# Usage: perf/remote.sh gate [RUNS] | perf/remote.sh shots | perf/remote.sh SCRIPT.mjs
+# Usage: perf/remote.sh gate [RUNS] | perf/remote.sh gate-url URL [RUNS] | perf/remote.sh shots | perf/remote.sh SCRIPT.mjs
 # The laptop has Chromium, Node and the tool packages in ~/site-rewrite (see perf/README.md).
 # shellcheck disable=SC2029  # The script builds the remote command on purpose, with values from this side.
 set -euo pipefail
@@ -11,6 +11,7 @@ tool=${1:-gate}
 shift || true
 case "$tool" in
   gate) ssh "$host" "cd ~/site-rewrite && . ./env.sh && cd tools && cp ../site/perf/*.mjs . && node gate.mjs ../site/dist ${1:-3}" ;;
+  gate-url) ssh "$host" "cd ~/site-rewrite && . ./env.sh && cd tools && cp ../site/perf/*.mjs . && node gate.mjs '$1' ${2:-3}" ;;
   *)
     out=${OUT:-$HOME/.cache/site-rewrite/ours}
     mkdir -p "$out"
