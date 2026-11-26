@@ -232,7 +232,7 @@ body {
   display: flex;
   gap: clamp(0.75rem, 2.5vw, 2rem);
   margin-inline: calc(50% - 50vw);
-  padding: 0.5rem var(--gut) 1.5rem;
+  padding: 0.5rem var(--gut) 3.5rem;
   overflow-x: auto;
   scroll-snap-type: x mandatory;
   scroll-padding-inline: var(--gut);
@@ -286,7 +286,7 @@ body {
   );
   box-shadow:
     0 1px 0 rgb(255 255 255 / 0.25) inset,
-    0 24px 48px -28px rgb(0 0 0 / 0.55);
+    0 18px 36px -24px rgb(0 0 0 / 0.5);
   transform: perspective(70rem) rotateY(0deg);
   transition:
     transform 0.45s cubic-bezier(0.2, 0.7, 0.2, 1),
@@ -407,7 +407,7 @@ body {
   display: flex;
   align-items: center;
   gap: 1rem;
-  margin-top: 0.75rem;
+  margin-top: -1.75rem;
 }
 .nav {
   flex: none;
@@ -550,5 +550,122 @@ body {
 @media (prefers-reduced-motion: reduce) {
   * {
     transition: none !important;
+  }
+}
+
+/* The stage under the first screen: colored ASCII art over a dithered ground (src/art.mjs, src/site.js). */
+:root {
+  --ground: #c9b98f;
+  --k0: #4a2c14;
+  --k1: #7a4a1f;
+  --k2: #c0471c;
+  --k3: #a86f00;
+  --k4: #d01f2a;
+  --k5: #8a6d22;
+  --k6: #356a8a;
+  --k7: #c45f00;
+  --k8: #1c1b18;
+  --k9: #2f7a2f;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --ground: #3a3423;
+    --k0: #a87a4f;
+    --k1: #c9915a;
+    --k2: #e07a45;
+    --k3: #f0b93a;
+    --k4: #ff5a5f;
+    --k5: #efe0bb;
+    --k6: #a9c4d4;
+    --k7: #ffa53a;
+    --k8: #ecebe6;
+    --k9: #7fbf5a;
+  }
+}
+.stage {
+  position: relative;
+  height: 27em;
+  overflow: hidden;
+  contain: strict;
+  font: 700 clamp(0.5rem, 1.3vw, 0.82rem) / 1.08 var(--mono);
+}
+.stage canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  image-rendering: pixelated;
+}
+.stage[data-season="tree"] {
+  --ground: #c4ccd2;
+}
+.walker,
+.tree,
+.deer {
+  position: absolute;
+  bottom: 11%;
+  left: 0;
+  margin: 0;
+  font: inherit;
+  white-space: pre;
+}
+.walker {
+  transform: translate3d(calc(70vw - 23ch), 0, 0);
+}
+.tree {
+  left: auto;
+  right: 10%;
+  bottom: 9%;
+}
+.deer {
+  left: auto;
+  right: calc(10% + 44ch);
+}
+.say {
+  position: absolute;
+  left: 0;
+  bottom: 62%;
+  margin: 0;
+  padding: 0.2em 0.5em;
+  border: 1px dashed var(--k7);
+  color: var(--k7);
+  font-size: 1.2em;
+  white-space: nowrap;
+}
+.k0 { color: var(--k0); }
+.k1 { color: var(--k1); }
+.k2 { color: var(--k2); }
+.k3 { color: var(--k3); }
+.k4 { color: var(--k4); }
+.k5 { color: var(--k5); }
+.k6 { color: var(--k6); }
+.k7 { color: var(--k7); }
+.k8 { color: var(--k8); }
+.k9 { color: var(--k9); }
+@media (prefers-color-scheme: dark) {
+  .stage[data-season="tree"] {
+    --ground: #4d575e;
+  }
+}
+@media (max-width: 46rem) {
+  .deer {
+    display: none;
+  }
+  .tree {
+    right: 50%;
+    transform: translateX(50%);
+  }
+}
+.stage {
+  pointer-events: none;
+}
+/* On a wide screen the stage moves up into the empty right half of the first screen. */
+@media (min-width: 64rem) {
+  .hero-text {
+    position: relative;
+    z-index: 1;
+  }
+  .stage {
+    margin-top: -20em;
   }
 }
