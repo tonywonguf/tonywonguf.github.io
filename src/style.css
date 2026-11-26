@@ -1,46 +1,49 @@
-/* The page is a tiled desktop: each part is a window with a title bar.
-   The window with keyboard focus gets the accent title bar, like a tiling window manager. */
+/* The build puts this file inline in index.html, so the page needs no second request for styles. */
 
 @font-face {
   font-family: "Schibsted Grotesk";
-  src: url("fonts/schibsted-grotesk.woff2") format("woff2");
-  font-weight: 400 900;
+  src: url("fonts/schibsted-grotesk-400.woff2") format("woff2");
+  font-weight: 400;
   font-style: normal;
-  font-display: swap;
+  font-display: optional;
+}
+@font-face {
+  font-family: "Schibsted Grotesk";
+  src: url("fonts/schibsted-grotesk-700.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: optional;
 }
 @font-face {
   font-family: "Schibsted Grotesk";
   src: url("fonts/schibsted-grotesk-italic.woff2") format("woff2");
-  font-weight: 400 900;
+  font-weight: 400;
   font-style: italic;
-  font-display: swap;
+  font-display: optional;
 }
 
 :root {
-  --desk: #cdd4dc;
-  --tile: #f8f9fa;
-  --ink: #18202b;
-  --muted: #586577;
-  --bar: #e3e8ee;
-  --bar-ink: #3c4756;
-  --accent: #1f6f64;
-  --accent-ink: #f2fbf9;
-  --link: #175c53;
-  --gap: 6px;
-  color-scheme: light;
+  --paper: #f4f2ed;
+  --card: #fbfaf7;
+  --ink: #1c1b18;
+  --muted: #5a574f;
+  --line: #d9d5cb;
+  --accent: #0d6b5b;
+  --mono: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace;
+  --sans:
+    "Schibsted Grotesk", system-ui, -apple-system, "Segoe UI", Roboto,
+    sans-serif;
+  --wrap: 68rem;
+  color-scheme: light dark;
 }
 @media (prefers-color-scheme: dark) {
   :root {
-    --desk: #0d1116;
-    --tile: #171c23;
-    --ink: #e4e8ee;
-    --muted: #97a3b2;
-    --bar: #222932;
-    --bar-ink: #aeb8c5;
-    --accent: #3fa796;
-    --accent-ink: #08201c;
-    --link: #74d1c1;
-    color-scheme: dark;
+    --paper: #131311;
+    --card: #1b1b18;
+    --ink: #ecebe6;
+    --muted: #a3a097;
+    --line: #34332e;
+    --accent: #5fcfb7;
   }
 }
 
@@ -48,164 +51,364 @@
   box-sizing: border-box;
 }
 html {
-  background: var(--desk);
+  background: var(--paper);
+  -webkit-text-size-adjust: 100%;
+  scroll-padding-top: 1rem;
+}
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
 }
 body {
   margin: 0;
-  padding: var(--gap);
-  min-height: 100vh;
-  background: var(--desk);
+  background: var(--paper);
   color: var(--ink);
-  font:
-    400 1.0625rem/1.55 "Schibsted Grotesk",
-    system-ui,
-    sans-serif;
+  font: 400 1.0625rem/1.6 var(--sans);
 }
-
-.desk {
-  display: grid;
-  gap: var(--gap);
-  grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
-  grid-template-areas:
-    "hero    now"
-    "ai      builds"
-    "earlier builds";
-  max-width: 78rem;
-  margin: 0 auto;
-}
-.tile-hero {
-  grid-area: hero;
-}
-.tile-now {
-  grid-area: now;
-}
-.tile-ai {
-  grid-area: ai;
-}
-.tile-builds {
-  grid-area: builds;
-}
-.tile-earlier {
-  grid-area: earlier;
-}
-
-.tile {
-  background: var(--tile);
-  display: flex;
-  flex-direction: column;
-  min-width: 0;
-}
-.bar {
-  margin: 0;
-  padding: 0.2rem 0.75rem;
-  background: var(--bar);
-  color: var(--bar-ink);
-  font-size: 0.8125rem;
-  font-weight: 500;
-  letter-spacing: 0.01em;
-}
-.tile-hero .bar,
-.tile:focus-within .bar {
-  background: var(--accent);
-  color: var(--accent-ink);
-}
-.desk:focus-within .tile-hero:not(:focus-within) .bar {
-  background: var(--bar);
-  color: var(--bar-ink);
-}
-.body {
-  padding: 1.25rem 1.5rem 1.5rem;
-}
-
-h1 {
-  margin: 0.5rem 0 0.75rem;
-  font-size: clamp(3rem, 9vw, 6.5rem);
-  font-weight: 800;
-  line-height: 0.92;
-  letter-spacing: -0.035em;
-}
-.intro {
-  max-width: 34ch;
-  margin: 0 0 1.25rem;
-  font-size: 1.3rem;
-  line-height: 1.4;
-  color: var(--ink);
-}
-.links {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem 1.25rem;
-  font-weight: 600;
-}
-
 a {
-  color: var(--link);
-  text-underline-offset: 0.18em;
+  color: inherit;
+  text-decoration-color: var(--line);
   text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
 }
 a:hover {
-  text-decoration-thickness: 2px;
+  color: var(--accent);
+  text-decoration-color: currentColor;
 }
-a:focus-visible {
+:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 3px;
   border-radius: 2px;
 }
+.wrap {
+  max-width: var(--wrap);
+  margin: 0 auto;
+  padding: 0 clamp(1rem, 4vw, 2.5rem);
+}
+.skip {
+  position: absolute;
+  left: -100vw;
+}
+.skip:focus {
+  left: 1rem;
+  top: 1rem;
+  background: var(--card);
+  padding: 0.5rem 0.75rem;
+}
 
-.plain {
-  list-style: none;
+/* Top bar */
+.top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem 1.5rem;
+  padding-block: 1.25rem;
+  font: 0.875rem/1.4 var(--mono);
+}
+.top .home {
+  text-decoration: none;
+  font-weight: 700;
+}
+.top nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 1.25rem;
+}
+.top nav a {
+  text-decoration: none;
+  color: var(--muted);
+  padding-block: 0.35rem;
+}
+.top nav a:hover {
+  color: var(--accent);
+}
+
+/* First screen */
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-areas: "text agent";
+  gap: 1rem 3rem;
+  align-items: center;
+  padding-block: clamp(2.5rem, 9vh, 6rem) clamp(2.5rem, 7vh, 4.5rem);
+}
+.hero-text {
+  grid-area: text;
+  min-width: 0;
+}
+h1 {
+  margin: 0;
+  font-size: clamp(3rem, 11vw, 6.75rem);
+  line-height: 0.95;
+  font-weight: 700;
+  letter-spacing: -0.035em;
+}
+.lede {
+  margin: 1.25rem 0 0;
+  max-width: 26ch;
+  font-size: clamp(1.4rem, 3.4vw, 2.1rem);
+  line-height: 1.2;
+  font-weight: 400;
+  letter-spacing: -0.015em;
+}
+.lede em {
+  font-style: italic;
+  font-weight: 400;
+  color: var(--accent);
+}
+.facts {
+  margin: 1.25rem 0 0;
+  color: var(--muted);
+  max-width: 44rem;
+}
+.facts a {
+  color: var(--ink);
+}
+
+/* Shell transcript: what a terminal prints for whoami and ls */
+.shell {
+  margin: 2rem 0 0;
+  padding: 1rem 1.25rem;
+  max-width: 44rem;
+  border: 1px dashed var(--line);
+  border-radius: 6px;
+  font: 0.875rem/1.7 var(--mono);
+  color: var(--muted);
+  overflow-wrap: anywhere;
+}
+.shell p {
+  margin: 0;
+}
+.shell .cmd {
+  color: var(--ink);
+}
+.shell .cmd::before {
+  content: "$ ";
+  color: var(--accent);
+}
+.shell a {
+  color: var(--ink);
+  display: inline-block;
+  min-height: 24px;
+  padding-block: 0.2rem;
+  margin-right: 0.9em;
+  white-space: nowrap;
+}
+
+/* The little agent. Its eyes follow the pointer after the page loads. */
+.agent {
+  grid-area: agent;
+  margin: 0;
+  font: clamp(0.75rem, 1.6vw, 1.4rem)/1.15 var(--mono);
+  color: var(--muted);
+  user-select: none;
+  white-space: pre;
+}
+.agent .eye {
+  color: var(--accent);
+}
+
+/* Sections */
+.part {
+  padding-block: clamp(2.5rem, 6vw, 4rem);
+  border-top: 1px solid var(--line);
+  /* The browser skips the layout of a section until it comes near the screen. */
+  content-visibility: auto;
+  contain-intrinsic-size: auto 40rem;
+}
+.part-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.25rem 1rem;
+  margin-bottom: 1.75rem;
+}
+h2 {
+  margin: 0;
+  font-size: clamp(1.6rem, 4vw, 2.25rem);
+  line-height: 1.1;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+.count {
+  font: 0.875rem var(--mono);
+  color: var(--muted);
+}
+
+/* Project cards */
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 24rem), 1fr));
+  gap: 1rem;
   margin: 0;
   padding: 0;
+  list-style: none;
 }
-.plain > li {
-  max-width: 62ch;
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 1.25rem 1.25rem 1.1rem;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  transition: border-color 0.15s;
 }
-.plain > li + li {
-  margin-top: 0.75rem;
+.card:hover,
+.card:focus-within {
+  border-color: var(--accent);
 }
-.tile-now .plain > li,
-.tile-ai .plain > li {
-  padding-left: 1rem;
-  border-left: 2px solid var(--bar);
+.card-top {
+  display: flex;
+  justify-content: space-between;
+  font: 0.8125rem var(--mono);
+  color: var(--muted);
 }
-
-.project h3 {
+.card h3 {
   margin: 0;
-  font-size: 1.125rem;
+  font-size: 1.375rem;
+  line-height: 1.2;
   font-weight: 700;
   letter-spacing: -0.01em;
+  overflow-wrap: anywhere;
 }
-.project p {
-  margin: 0.15rem 0 0;
+.card h3 a {
+  text-decoration: none;
 }
-.project .meta {
+.card h3 a::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+}
+.card p {
+  margin: 0;
   color: var(--muted);
-  font-size: 0.875rem;
+  font-size: 1rem;
+  line-height: 1.55;
 }
-.projects > li + li {
-  margin-top: 1.1rem;
+.arrow {
+  transition: transform 0.15s;
+}
+.card:hover .arrow {
+  transform: translate(2px, -2px);
+  color: var(--accent);
+}
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin: auto 0 0;
+  padding: 0.25rem 0 0;
+  list-style: none;
+  font: 0.75rem/1 var(--mono);
+}
+.tags li {
+  padding: 0.35rem 0.5rem;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  color: var(--muted);
+}
+.tags a {
+  position: relative;
+  z-index: 1;
+  color: var(--accent);
+}
+
+/* Earlier work: one line each */
+.rows {
+  margin: 2.5rem 0 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px dashed var(--line);
+}
+.rows li {
+  display: grid;
+  grid-template-columns: minmax(8rem, 12rem) 1fr auto;
+  gap: 0.25rem 1.5rem;
+  padding: 0.85rem 0;
+  border-bottom: 1px dashed var(--line);
+}
+.rows .meta {
+  grid-column: 3;
+  grid-row: 1;
+  font: 0.8125rem/1.9 var(--mono);
+  color: var(--muted);
+  white-space: nowrap;
+}
+.rows p {
+  margin: 0;
+  color: var(--muted);
+}
+.sub {
+  margin: 2.5rem 0 0;
+  font: 600 0.875rem var(--mono);
+  color: var(--muted);
+}
+
+/* Text lists */
+.notes {
+  display: grid;
+  gap: 1rem;
+  max-width: 46rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: n;
+}
+.notes li {
+  position: relative;
+  padding-left: 2.5rem;
+  font-size: 1.125rem;
+  line-height: 1.55;
+}
+.notes li::before {
+  counter-increment: n;
+  content: counter(n, decimal-leading-zero);
+  position: absolute;
+  left: 0;
+  top: 0.25em;
+  font: 0.8125rem var(--mono);
+  color: var(--accent);
 }
 
 .foot {
-  max-width: 78rem;
-  margin: 0 auto;
-  padding: 0.75rem 0.25rem 1rem;
+  padding-block: 2rem 3rem;
+  border-top: 1px solid var(--line);
+  font: 0.8125rem/1.7 var(--mono);
   color: var(--muted);
-  font-size: 0.875rem;
 }
 .foot p {
   margin: 0;
 }
 
-@media (max-width: 52rem) {
-  .desk {
-    grid-template-columns: minmax(0, 1fr);
-    grid-template-areas: "hero" "now" "builds" "ai" "earlier";
+@media (max-width: 46rem) {
+  .hero {
+    grid-template-columns: 1fr;
+    grid-template-areas: "agent" "text";
+    padding-top: 1.5rem;
   }
-  .body {
-    padding: 1rem 1.1rem 1.25rem;
+  .agent {
+    justify-self: end;
+    margin-bottom: -2.5rem;
   }
-  .intro {
-    font-size: 1.15rem;
+  .rows li {
+    grid-template-columns: 1fr auto;
+  }
+  .rows .meta {
+    grid-column: 2;
+  }
+  .rows p {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
   }
 }

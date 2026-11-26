@@ -29,6 +29,8 @@ jobs:
       - run: npm run build
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      # Do the tests again on the built page. The test of the first-load budget needs dist/.
+      - run: npm test
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist

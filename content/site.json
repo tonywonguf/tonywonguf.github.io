@@ -1,14 +1,19 @@
 {
   "name": "Tony Wong",
   "githubUser": "tonywonguf",
+  "siteUrl": "https://tonywonguf.github.io/",
+  "role": "Engineer",
   "intro": "I am an engineer. I build local AI and agent tools for Linux, mostly in Rust.",
+  "headline": "I build *local AI* and agent tools for Linux, mostly in Rust.",
+  "education": "B.S. in Computer Science and Statistics, University of Florida, 2026",
+  "languages": ["Rust", "Go", "C++", "C", "Python"],
   "links": {
     "github": "https://github.com/tonywonguf",
     "linkedin": "https://www.linkedin.com/in/tony-wong-uf"
   },
   "now": [
     "Voice input on Linux: tools that type dictated text on Wayland, and a signal on the screen when the microphone is on.",
-    "Ports of machine learning models to pure Rust, so that they operate without Python.",
+    "Ports of machine learning models to pure Rust, so that they operate without Python."
   ],
   "ai": [
     "I write code with Claude Code. Several sessions work at the same time. Each session takes one task from a shared task board, and I examine the result before I accept it.",
