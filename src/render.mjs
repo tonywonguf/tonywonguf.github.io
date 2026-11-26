@@ -1,3 +1,5 @@
+import { turkey, frameHtml } from "./art.mjs";
+
 // Make the HTML page and llms.txt from the site text and the selected repositories.
 // This module does not read files or use the network, so the tests can call it directly.
 
@@ -171,6 +173,11 @@ export function renderPage({ site, recent, earlier, now, css, script, fonts }) {
         </div>
       </div>
     </section>
+    <div class="stage" id="stage" aria-hidden="true">
+      <canvas></canvas>
+      <p class="say" hidden>gobble gobble!</p>
+      <pre class="walker">${frameHtml(turkey(0, 1))}</pre>
+    </div>
 
     <section class="part" id="work" aria-labelledby="t-work">
       <div class="wrap">

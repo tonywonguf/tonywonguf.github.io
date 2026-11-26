@@ -5,6 +5,7 @@
 import { readFile, writeFile, mkdir, cp, rm } from "node:fs/promises";
 import { selectRepos } from "./repos.mjs";
 import { renderPage, renderLlms } from "./render.mjs";
+import * as art from "./art.mjs";
 
 const root = new URL("..", import.meta.url);
 const path = (p) => new URL(p, root);
@@ -83,7 +84,14 @@ const input = {
   earlier,
   now,
   css: minifyCss(await readFile(path("src/style.css"), "utf8")),
-  script: minifyJs(await readFile(path("src/carousel.js"), "utf8")),
+  // The carousel, then the art functions (as source) and the stage that uses them.
+  script: minifyJs(
+    [
+      await readFile(path("src/carousel.js"), "utf8"),
+      ...["turkey", "tree", "reindeer", "frameHtml"].map((n) => art[n].toString()),
+      await readFile(path("src/site.js"), "utf8"),
+    ].join("\n"),
+  ),
   fonts,
 };
 

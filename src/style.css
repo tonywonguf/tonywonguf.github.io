@@ -610,7 +610,7 @@ body {
   white-space: pre;
 }
 .walker {
-  transform: translate3d(calc(70vw - 23ch), 0, 0);
+  transform: translate3d(calc(96vw - 50ch), 0, 0);
 }
 .tree {
   left: auto;
