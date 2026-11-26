@@ -17,7 +17,7 @@ The script does not list forks, archived repositories, or the names in `projects
 | `src/repos.mjs` | The filter for public repositories |
 | `src/render.mjs` | Makes the HTML page and `llms.txt` |
 | `src/style.css` | The styles. The build puts them inline in the page. |
-| `src/agent-art.mjs`, `src/agent.js` | The ASCII agent on the first screen. Its eyes follow the pointer. |
+| `src/carousel.js` | The script of the project carousel: arrow buttons, arrow keys, counter and bar. |
 | `assets/fonts/` | Schibsted Grotesk, cut to Latin characters (SIL Open Font License) |
 | `perf/` | The speed gate and the screenshot tools. The site does not use them. |
 
@@ -50,7 +50,7 @@ These rules keep the page in the budget:
 
 - The page has one HTML file with the styles inline. It loads no script file and no stylesheet file.
 - The fonts use `font-display: optional`. If a font is late, the browser keeps the system font and the text does not move.
-- The script of the agent starts after the page loads, when the browser is idle. If the reader asks for reduced motion, the agent does not move.
+- The project carousel is a scroll container with snap points, so it works without the script. The project covers use only CSS gradients, so they add no image request.
 
 ## Publish
 

@@ -8,7 +8,7 @@ The tools in this folder measure the site. The site does not use them, and the w
 |---|---|
 | `gate.mjs` | Serves `dist/` with gzip and runs Lighthouse on a simulated phone. It gives the median of each value and exits with 1 if a value is outside the budget. |
 | `shots.mjs` | Makes screenshots at phone, tablet and desktop width, in the light and the dark color scheme. |
-| `agentcheck.mjs` | Makes sure that the agent follows the pointer, and that it does not move when the reader asks for reduced motion. |
+| `carouselcheck.mjs` | Makes sure that the arrow buttons and the arrow keys move the project carousel, and that the counter follows. |
 | `remote.sh` | Copies `dist/` and `perf/` to the laptop (ssh host `gpu-node`) and runs one tool there. |
 
 ## Requirements
@@ -20,7 +20,7 @@ The tools need Node.js, a Chromium binary in `CHROME_PATH`, and the packages `li
 1. Build the site with `npm run build:offline`.
 2. Run `perf/remote.sh gate 5` to do five Lighthouse runs on the laptop.
 3. Run `perf/remote.sh shots` to make the screenshots. They go to `~/.cache/site-rewrite/ours`.
-4. Run `perf/remote.sh agentcheck.mjs` to do a test of the agent.
+4. Run `perf/remote.sh carouselcheck.mjs` to do a test of the carousel.
 
 ## Cut the fonts again
 
