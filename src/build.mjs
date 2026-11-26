@@ -4,6 +4,8 @@
 
 import { readFile, writeFile, mkdir, cp, rm } from "node:fs/promises";
 import { selectRepos } from "./repos.mjs";
+import { renderPage, renderLlms } from "./render.mjs";
+import * as art from "./art.mjs";
 
 const root = new URL("..", import.meta.url);
 const path = (p) => new URL(p, root);
@@ -57,115 +59,48 @@ if (refused.length)
     `Not listed, because GitHub does not report them as public: ${refused.join(", ")}`,
   );
 
-const esc = (s) =>
-  String(s).replace(
-    /[&<>"']/g,
-    (c) =>
-      ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[
-        c
-      ],
-  );
-const month = (d) =>
-  d.toLocaleDateString("en-US", {
-    month: "long",
-    year: "numeric",
-    timeZone: "UTC",
-  });
-const day = (d) =>
-  d.toLocaleDateString("en-US", {
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-    timeZone: "UTC",
-  });
+// Remove comments and extra white space from the CSS before it goes inline.
+const minifyCss = (s) =>
+  s
+    .replace(/\/\*[\s\S]*?\*\//g, "")
+    .replace(/\s+/g, " ")
+    .replace(/\s*([{}:;,>])\s*/g, "$1")
+    .replace(/;}/g, "}")
+    .trim();
+// Remove the comment lines and the indent from the agent script.
+const minifyJs = (s) =>
+  s
+    .split("\n")
+    .map((l) => l.trim())
+    .filter((l) => l && !l.startsWith("//"))
+    .join("\n");
 
-const project = (r) => `
-        <li class="project">
-          <h3><a href="${esc(r.url)}">${esc(r.name)}</a></h3>
-          ${r.description ? `<p>${esc(r.description)}</p>` : ""}
-          <p class="meta">${[r.language, `Updated ${month(r.pushed)}`].filter(Boolean).map(esc).join(", ")}${
-            r.homepage ? `, <a href="${esc(r.homepage)}">live site</a>` : ""
-          }</p>
-        </li>`;
-
-const tile = (area, title, body, extra = "") => `
-    <section class="tile tile-${area}" aria-labelledby="t-${area}"${extra}>
-      <h2 class="bar" id="t-${area}">${esc(title)}</h2>
-      <div class="body">${body}
-      </div>
-    </section>`;
-
-const list = (items) => `
-        <ul class="plain">${items.map((t) => `\n          <li>${esc(t)}</li>`).join("")}
-        </ul>`;
-
-const links = Object.entries(site.links)
-  .filter(([, url]) => url)
-  .map(
-    ([name, url]) =>
-      `<a href="${esc(url)}">${name === "github" ? "GitHub" : name === "linkedin" ? "LinkedIn" : esc(name)}</a>`,
-  )
-  .join("\n          ");
-
-const html = `<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>${esc(site.name)}</title>
-  <meta name="description" content="${esc(site.intro)}">
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' fill='%231f6f64'/%3E%3Crect y='0' width='16' height='3' fill='%23e3e8ee'/%3E%3C/svg%3E">
-  <link rel="preload" href="fonts/schibsted-grotesk.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
-  <main class="desk">
-    <section class="tile tile-hero" aria-labelledby="name">
-      <p class="bar" aria-hidden="true">${esc(site.githubUser)}</p>
-      <div class="body">
-        <h1 id="name">${esc(site.name)}</h1>
-        <p class="intro">${esc(site.intro)}</p>
-        <nav class="links" aria-label="Links">
-          ${links}
-        </nav>
-      </div>
-    </section>
-${tile("now", "What I work on now", list(site.now))}
-${tile("ai", "What I use AI for", list(site.ai))}
-${tile(
-  "builds",
-  "What I build",
-  recent.length
-    ? `
-        <ul class="plain projects">${recent.map(project).join("")}
-        </ul>`
-    : `
-        <p>No public projects were updated recently. Older work is in the next part.</p>`,
-)}
-${
-  earlier.length
-    ? tile(
-        "earlier",
-        "Earlier work",
-        `
-        <ul class="plain projects">${earlier.map(project).join("")}
-        </ul>`,
-      )
-    : ""
-}
-  </main>
-  <footer class="foot">
-    <p>This page is built from my public GitHub repositories. Last build: ${day(now)}.</p>
-  </footer>
-</body>
-</html>
-`;
+const fonts = ["schibsted-grotesk-400.woff2",
+  "schibsted-grotesk-700.woff2",
+  "schibsted-grotesk-italic.woff2",];
+const input = {
+  site,
+  recent,
+  earlier,
+  now,
+  css: minifyCss(await readFile(path("src/style.css"), "utf8")),
+  // The carousel, then the art functions (as source) and the stage that uses them.
+  script: minifyJs(
+    [
+      await readFile(path("src/carousel.js"), "utf8"),
+      ...["turkey", "tree", "reindeer", "frameHtml"].map((n) => art[n].toString()),
+      await readFile(path("src/site.js"), "utf8"),
+    ].join("\n"),
+  ),
+  fonts,
+};
 
 await rm(path("dist"), { recursive: true, force: true });
 await mkdir(path("dist/fonts"), { recursive: true });
-await writeFile(path("dist/index.html"), html);
-await cp(path("src/style.css"), path("dist/style.css"));
-await cp(path("assets/fonts"), path("dist/fonts"), { recursive: true });
+await writeFile(path("dist/index.html"), renderPage(input));
+await writeFile(path("dist/llms.txt"), renderLlms(input));
+for (const f of [...fonts, "OFL.txt"])
+  await cp(path(`assets/fonts/${f}`), path(`dist/fonts/${f}`));
 console.log(
   `Built dist/index.html: ${recent.length} recent, ${earlier.length} earlier, ${refused.length} not listed.`,
 );

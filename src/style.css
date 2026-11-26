@@ -1,46 +1,49 @@
-/* The page is a tiled desktop: each part is a window with a title bar.
-   The window with keyboard focus gets the accent title bar, like a tiling window manager. */
+/* The build puts this file inline in index.html, so the page needs no second request for styles. */
 
 @font-face {
   font-family: "Schibsted Grotesk";
-  src: url("fonts/schibsted-grotesk.woff2") format("woff2");
-  font-weight: 400 900;
+  src: url("fonts/schibsted-grotesk-400.woff2") format("woff2");
+  font-weight: 400;
   font-style: normal;
-  font-display: swap;
+  font-display: optional;
+}
+@font-face {
+  font-family: "Schibsted Grotesk";
+  src: url("fonts/schibsted-grotesk-700.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: optional;
 }
 @font-face {
   font-family: "Schibsted Grotesk";
   src: url("fonts/schibsted-grotesk-italic.woff2") format("woff2");
-  font-weight: 400 900;
+  font-weight: 400;
   font-style: italic;
-  font-display: swap;
+  font-display: optional;
 }
 
 :root {
-  --desk: #cdd4dc;
-  --tile: #f8f9fa;
-  --ink: #18202b;
-  --muted: #586577;
-  --bar: #e3e8ee;
-  --bar-ink: #3c4756;
-  --accent: #1f6f64;
-  --accent-ink: #f2fbf9;
-  --link: #175c53;
-  --gap: 6px;
-  color-scheme: light;
+  --paper: #f4f2ed;
+  --card: #fbfaf7;
+  --ink: #1c1b18;
+  --muted: #5a574f;
+  --line: #d9d5cb;
+  --accent: #0d6b5b;
+  --mono: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace;
+  --sans:
+    "Schibsted Grotesk", system-ui, -apple-system, "Segoe UI", Roboto,
+    sans-serif;
+  --wrap: 68rem;
+  color-scheme: light dark;
 }
 @media (prefers-color-scheme: dark) {
   :root {
-    --desk: #0d1116;
-    --tile: #171c23;
-    --ink: #e4e8ee;
-    --muted: #97a3b2;
-    --bar: #222932;
-    --bar-ink: #aeb8c5;
-    --accent: #3fa796;
-    --accent-ink: #08201c;
-    --link: #74d1c1;
-    color-scheme: dark;
+    --paper: #131311;
+    --card: #1b1b18;
+    --ink: #ecebe6;
+    --muted: #a3a097;
+    --line: #34332e;
+    --accent: #5fcfb7;
   }
 }
 
@@ -48,164 +51,625 @@
   box-sizing: border-box;
 }
 html {
-  background: var(--desk);
+  background: var(--paper);
+  -webkit-text-size-adjust: 100%;
+  scroll-padding-top: 1rem;
+}
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
 }
 body {
   margin: 0;
-  padding: var(--gap);
-  min-height: 100vh;
-  background: var(--desk);
+  background: var(--paper);
   color: var(--ink);
-  font:
-    400 1.0625rem/1.55 "Schibsted Grotesk",
-    system-ui,
-    sans-serif;
+  font: 400 1.0625rem/1.6 var(--sans);
 }
-
-.desk {
-  display: grid;
-  gap: var(--gap);
-  grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
-  grid-template-areas:
-    "hero    now"
-    "ai      builds"
-    "earlier builds";
-  max-width: 78rem;
-  margin: 0 auto;
-}
-.tile-hero {
-  grid-area: hero;
-}
-.tile-now {
-  grid-area: now;
-}
-.tile-ai {
-  grid-area: ai;
-}
-.tile-builds {
-  grid-area: builds;
-}
-.tile-earlier {
-  grid-area: earlier;
-}
-
-.tile {
-  background: var(--tile);
-  display: flex;
-  flex-direction: column;
-  min-width: 0;
-}
-.bar {
-  margin: 0;
-  padding: 0.2rem 0.75rem;
-  background: var(--bar);
-  color: var(--bar-ink);
-  font-size: 0.8125rem;
-  font-weight: 500;
-  letter-spacing: 0.01em;
-}
-.tile-hero .bar,
-.tile:focus-within .bar {
-  background: var(--accent);
-  color: var(--accent-ink);
-}
-.desk:focus-within .tile-hero:not(:focus-within) .bar {
-  background: var(--bar);
-  color: var(--bar-ink);
-}
-.body {
-  padding: 1.25rem 1.5rem 1.5rem;
-}
-
-h1 {
-  margin: 0.5rem 0 0.75rem;
-  font-size: clamp(3rem, 9vw, 6.5rem);
-  font-weight: 800;
-  line-height: 0.92;
-  letter-spacing: -0.035em;
-}
-.intro {
-  max-width: 34ch;
-  margin: 0 0 1.25rem;
-  font-size: 1.3rem;
-  line-height: 1.4;
-  color: var(--ink);
-}
-.links {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem 1.25rem;
-  font-weight: 600;
-}
-
 a {
-  color: var(--link);
-  text-underline-offset: 0.18em;
+  color: inherit;
+  text-decoration-color: var(--line);
   text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
 }
 a:hover {
-  text-decoration-thickness: 2px;
+  color: var(--accent);
+  text-decoration-color: currentColor;
 }
-a:focus-visible {
+:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 3px;
   border-radius: 2px;
 }
+.wrap {
+  max-width: var(--wrap);
+  margin: 0 auto;
+  padding: 0 clamp(1rem, 4vw, 2.5rem);
+}
+.skip {
+  position: absolute;
+  left: -100vw;
+}
+.skip:focus {
+  left: 1rem;
+  top: 1rem;
+  background: var(--card);
+  padding: 0.5rem 0.75rem;
+}
 
-.plain {
+/* Top bar */
+.top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem 1.5rem;
+  padding-block: 1.25rem;
+  font: 0.875rem/1.4 var(--mono);
+}
+.top .home {
+  text-decoration: none;
+  font-weight: 700;
+}
+.top nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 1.25rem;
+}
+.top nav a {
+  text-decoration: none;
+  color: var(--muted);
+  padding-block: 0.35rem;
+}
+.top nav a:hover {
+  color: var(--accent);
+}
+
+/* First screen */
+.hero {
+  padding-block: clamp(2.5rem, 9vh, 6rem) clamp(2.5rem, 7vh, 4.5rem);
+}
+.hero-text {
+  min-width: 0;
+}
+h1 {
+  margin: 0;
+  font-size: clamp(3rem, 11vw, 6.75rem);
+  line-height: 0.95;
+  font-weight: 700;
+  letter-spacing: -0.035em;
+}
+.lede {
+  margin: 1.25rem 0 0;
+  max-width: 26ch;
+  font-size: clamp(1.4rem, 3.4vw, 2.1rem);
+  line-height: 1.2;
+  font-weight: 400;
+  letter-spacing: -0.015em;
+}
+.lede em {
+  font-style: italic;
+  font-weight: 400;
+  color: var(--accent);
+}
+.facts {
+  margin: 1.25rem 0 0;
+  color: var(--muted);
+  max-width: 44rem;
+}
+.facts a {
+  color: var(--ink);
+}
+
+/* Shell transcript: what a terminal prints for whoami and ls */
+.shell {
+  margin: 2rem 0 0;
+  padding: 1rem 1.25rem;
+  max-width: 44rem;
+  border: 1px dashed var(--line);
+  border-radius: 6px;
+  font: 0.875rem/1.7 var(--mono);
+  color: var(--muted);
+  overflow-wrap: anywhere;
+}
+.shell p {
+  margin: 0;
+}
+.shell .cmd {
+  color: var(--ink);
+}
+.shell .cmd::before {
+  content: "$ ";
+  color: var(--accent);
+}
+.shell a {
+  color: var(--ink);
+  display: inline-block;
+  min-height: 24px;
+  padding-block: 0.2rem;
+  margin-right: 0.9em;
+  white-space: nowrap;
+}
+
+/* Sections */
+.part {
+  padding-block: clamp(2.5rem, 6vw, 4rem);
+  border-top: 1px solid var(--line);
+  /* The browser skips the layout of a section until it comes near the screen. */
+  content-visibility: auto;
+  contain-intrinsic-size: auto 40rem;
+}
+.part-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.25rem 1rem;
+  margin-bottom: 1.75rem;
+}
+h2 {
+  margin: 0;
+  font-size: clamp(1.6rem, 4vw, 2.25rem);
+  line-height: 1.1;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+.count {
+  font: 0.875rem var(--mono);
+  color: var(--muted);
+}
+
+/* Project carousel. The track is a scroll container with snap points.
+   The slides at the side are smaller and dim. Only transform and opacity change, so the browser does not do the layout again. */
+body {
+  overflow-x: clip;
+}
+.carousel {
+  --gut: max(clamp(1rem, 4vw, 2.5rem), calc(50vw - var(--wrap) / 2 + 2.5rem));
+}
+.track {
+  position: relative;
+  display: flex;
+  gap: clamp(0.75rem, 2.5vw, 2rem);
+  margin-inline: calc(50% - 50vw);
+  padding: 0.5rem var(--gut) 3.5rem;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-padding-inline: var(--gut);
+  scrollbar-width: none;
+  overscroll-behavior-x: contain;
+}
+.track::-webkit-scrollbar {
+  display: none;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .track {
+    scroll-behavior: smooth;
+  }
+}
+.slide {
+  flex: 0 0 min(86vw, 60rem);
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(1.25rem, 4vw, 3.5rem);
+  scroll-snap-align: start;
+  transform-origin: left center;
+  transition: transform 0.45s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+/* The script adds the class "js". Without the script, all slides stay fully visible.
+   The text of a side slide is fully hidden, not dim, so no text has low contrast. */
+.js .slide:not(.on, :focus-within) {
+  transform: scale(0.94);
+}
+.js .slide:not(.on, :focus-within) .cover {
+  opacity: 0.45;
+}
+.info {
+  transition: opacity 0.35s;
+}
+.js .slide:not(.on, :focus-within) .info {
+  opacity: 0;
+}
+.cover {
+  position: relative;
+  display: block;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  border-radius: 22px;
+  text-decoration: none;
+  color: #fff;
+  background: linear-gradient(
+    var(--a),
+    hsl(var(--h) 70% 56%),
+    hsl(calc(var(--h) - 40) 55% 24%)
+  );
+  box-shadow:
+    0 1px 0 rgb(255 255 255 / 0.25) inset,
+    0 18px 36px -24px rgb(0 0 0 / 0.5);
+  transform: perspective(70rem) rotateY(0deg);
+  transition:
+    transform 0.45s cubic-bezier(0.2, 0.7, 0.2, 1),
+    opacity 0.35s;
+}
+.js .slide:not(.on, :focus-within) .cover {
+  transform: perspective(70rem) rotateY(9deg);
+}
+.slide.on .cover:hover {
+  transform: perspective(70rem) rotateY(-4deg) translateY(-4px);
+}
+/* Contour rings and a field of dots around one point. The point is different for each project. */
+.cover::before,
+.cover::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+}
+.cover::before {
+  background: repeating-radial-gradient(
+    circle at var(--x) var(--y),
+    transparent 0 26px,
+    rgb(255 255 255 / 0.2) 27px 28px
+  );
+  -webkit-mask: radial-gradient(circle at var(--x) var(--y), #000 10%, transparent 75%);
+  mask: radial-gradient(circle at var(--x) var(--y), #000 10%, transparent 75%);
+}
+.cover::after {
+  background: radial-gradient(circle, rgb(0 0 0 / 0.32) 1.6px, transparent 2px) 0 0 / 11px 11px;
+  -webkit-mask: linear-gradient(calc(var(--a) + 180deg), #000, transparent 65%);
+  mask: linear-gradient(calc(var(--a) + 180deg), #000, transparent 65%);
+}
+.cover-mark {
+  position: absolute;
+  z-index: 1;
+  left: 0.06em;
+  bottom: -0.2em;
+  font: 700 clamp(4rem, 13vw, 9.5rem) / 1 var(--mono);
+  letter-spacing: -0.06em;
+  color: rgb(255 255 255 / 0.92);
+  text-shadow: 0 2px 30px rgb(0 0 0 / 0.25);
+  white-space: nowrap;
+}
+.cover-lang {
+  position: absolute;
+  z-index: 1;
+  top: 1rem;
+  left: 1rem;
+  padding: 0.3rem 0.6rem;
+  border-radius: 99px;
+  background: rgb(0 0 0 / 0.38);
+  font: 0.75rem/1 var(--mono);
+  letter-spacing: 0.04em;
+  text-transform: lowercase;
+}
+.info {
+  min-width: 0;
+}
+.no {
+  margin: 0;
+  font: 0.8125rem var(--mono);
+  letter-spacing: 0.06em;
+  color: var(--muted);
+}
+.info h3 {
+  margin: 0.4rem 0 0;
+  font-size: clamp(1.9rem, 4.4vw, 3.25rem);
+  line-height: 1;
+  font-weight: 700;
+  letter-spacing: -0.035em;
+  overflow-wrap: anywhere;
+}
+.info h3 a {
+  text-decoration: none;
+}
+.desc {
+  margin: 1rem 0 0;
+  max-width: 34rem;
+  color: var(--muted);
+  font-size: 1rem;
+  line-height: 1.55;
+}
+.info .tags {
+  margin-top: 1.1rem;
+}
+.go {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 1.4rem 0 0;
+}
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+  min-height: 44px;
+  padding: 0 1.1rem;
+  border-radius: 99px;
+  background: var(--ink);
+  color: var(--paper);
+  font: 600 0.9375rem var(--sans);
+  text-decoration: none;
+}
+.btn:hover {
+  background: var(--accent);
+  color: var(--paper);
+}
+.btn.ghost {
+  background: none;
+  color: var(--ink);
+  border: 1px solid var(--line);
+}
+.btn.ghost:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+.controls {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  /* The controls go up into the bottom padding of the track, which gives the cover shadow room.
+     They need their own layer, or the track covers them. */
+  position: relative;
+  z-index: 1;
+  margin-top: -1.75rem;
+}
+.nav {
+  flex: none;
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  background: var(--card);
+  color: var(--ink);
+  font: 1.1rem/1 var(--mono);
+  cursor: pointer;
+}
+.nav:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+.pos {
+  margin: 0;
+  font: 0.875rem var(--mono);
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+.pos span {
+  color: var(--ink);
+}
+.bar {
+  flex: 1;
+  height: 2px;
+  background: var(--line);
+  overflow: hidden;
+}
+.bar span {
+  display: block;
+  height: 100%;
+  background: var(--accent);
+  transition: width 0.35s;
+}
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin: auto 0 0;
+  padding: 0.25rem 0 0;
   list-style: none;
+  font: 0.75rem/1 var(--mono);
+}
+.tags li {
+  padding: 0.35rem 0.5rem;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  color: var(--muted);
+}
+
+/* Earlier work: one line each */
+.rows {
+  margin: 2.5rem 0 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px dashed var(--line);
+}
+.rows li {
+  display: grid;
+  grid-template-columns: minmax(8rem, 12rem) 1fr auto;
+  gap: 0.25rem 1.5rem;
+  padding: 0.85rem 0;
+  border-bottom: 1px dashed var(--line);
+}
+.rows .meta {
+  grid-column: 3;
+  grid-row: 1;
+  font: 0.8125rem/1.9 var(--mono);
+  color: var(--muted);
+  white-space: nowrap;
+}
+.rows p {
+  margin: 0;
+  color: var(--muted);
+}
+.sub {
+  margin: 2.5rem 0 0;
+  font: 600 0.875rem var(--mono);
+  color: var(--muted);
+}
+
+/* Text lists */
+.notes {
+  display: grid;
+  gap: 1rem;
+  max-width: 46rem;
   margin: 0;
   padding: 0;
+  list-style: none;
+  counter-reset: n;
 }
-.plain > li {
-  max-width: 62ch;
-}
-.plain > li + li {
-  margin-top: 0.75rem;
-}
-.tile-now .plain > li,
-.tile-ai .plain > li {
-  padding-left: 1rem;
-  border-left: 2px solid var(--bar);
-}
-
-.project h3 {
-  margin: 0;
+.notes li {
+  position: relative;
+  padding-left: 2.5rem;
   font-size: 1.125rem;
-  font-weight: 700;
-  letter-spacing: -0.01em;
+  line-height: 1.55;
 }
-.project p {
-  margin: 0.15rem 0 0;
-}
-.project .meta {
-  color: var(--muted);
-  font-size: 0.875rem;
-}
-.projects > li + li {
-  margin-top: 1.1rem;
+.notes li::before {
+  counter-increment: n;
+  content: counter(n, decimal-leading-zero);
+  position: absolute;
+  left: 0;
+  top: 0.25em;
+  font: 0.8125rem var(--mono);
+  color: var(--accent);
 }
 
 .foot {
-  max-width: 78rem;
-  margin: 0 auto;
-  padding: 0.75rem 0.25rem 1rem;
+  padding-block: 2rem 3rem;
+  border-top: 1px solid var(--line);
+  font: 0.8125rem/1.7 var(--mono);
   color: var(--muted);
-  font-size: 0.875rem;
 }
 .foot p {
   margin: 0;
 }
 
-@media (max-width: 52rem) {
-  .desk {
-    grid-template-columns: minmax(0, 1fr);
-    grid-template-areas: "hero" "now" "builds" "ai" "earlier";
+@media (max-width: 46rem) {
+  .slide {
+    grid-template-columns: 1fr;
+    align-items: start;
   }
-  .body {
-    padding: 1rem 1.1rem 1.25rem;
+  .cover {
+    aspect-ratio: 16 / 10;
   }
-  .intro {
-    font-size: 1.15rem;
+  .rows li {
+    grid-template-columns: 1fr auto;
+  }
+  .rows .meta {
+    grid-column: 2;
+  }
+  .rows p {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+  }
+}
+
+/* The stage under the first screen: colored ASCII art over a dithered ground (src/art.mjs, src/site.js). */
+:root {
+  --ground: #c9b98f;
+  --k0: #4a2c14;
+  --k1: #7a4a1f;
+  --k2: #c0471c;
+  --k3: #a86f00;
+  --k4: #d01f2a;
+  --k5: #8a6d22;
+  --k6: #356a8a;
+  --k7: #c45f00;
+  --k8: #1c1b18;
+  --k9: #2f7a2f;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --ground: #3a3423;
+    --k0: #a87a4f;
+    --k1: #c9915a;
+    --k2: #e07a45;
+    --k3: #f0b93a;
+    --k4: #ff5a5f;
+    --k5: #efe0bb;
+    --k6: #a9c4d4;
+    --k7: #ffa53a;
+    --k8: #ecebe6;
+    --k9: #7fbf5a;
+  }
+}
+.stage {
+  position: relative;
+  height: 27em;
+  overflow: hidden;
+  contain: strict;
+  font: 700 clamp(0.5rem, 1.3vw, 0.82rem) / 1.08 var(--mono);
+}
+.stage canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  image-rendering: pixelated;
+}
+.stage[data-season="tree"] {
+  --ground: #c4ccd2;
+}
+.walker,
+.tree,
+.deer {
+  position: absolute;
+  bottom: 11%;
+  left: 0;
+  margin: 0;
+  font: inherit;
+  white-space: pre;
+}
+.walker {
+  transform: translate3d(calc(96vw - 50ch), 0, 0);
+}
+.tree {
+  left: auto;
+  right: 10%;
+  bottom: 9%;
+}
+.deer {
+  left: auto;
+  right: calc(10% + 44ch);
+}
+.say {
+  position: absolute;
+  left: 0;
+  bottom: 62%;
+  margin: 0;
+  padding: 0.2em 0.5em;
+  border: 1px dashed var(--k7);
+  color: var(--k7);
+  font-size: 1.2em;
+  white-space: nowrap;
+}
+.k0 { color: var(--k0); }
+.k1 { color: var(--k1); }
+.k2 { color: var(--k2); }
+.k3 { color: var(--k3); }
+.k4 { color: var(--k4); }
+.k5 { color: var(--k5); }
+.k6 { color: var(--k6); }
+.k7 { color: var(--k7); }
+.k8 { color: var(--k8); }
+.k9 { color: var(--k9); }
+@media (prefers-color-scheme: dark) {
+  .stage[data-season="tree"] {
+    --ground: #4d575e;
+  }
+}
+@media (max-width: 46rem) {
+  .deer {
+    display: none;
+  }
+  .tree {
+    right: 50%;
+    transform: translateX(50%);
+  }
+}
+.stage {
+  pointer-events: none;
+}
+/* On a wide screen the stage moves up into the empty right half of the first screen. */
+@media (min-width: 64rem) {
+  .hero-text {
+    position: relative;
+    z-index: 1;
+  }
+  .stage {
+    margin-top: -20em;
   }
 }

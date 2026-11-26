@@ -1,17 +1,5 @@
 [
   {
-    "name": "gliclass-candle",
-    "private": false,
-    "visibility": "public",
-    "fork": false,
-    "archived": false,
-    "html_url": "https://github.com/tonywonguf/gliclass-candle",
-    "homepage": null,
-    "description": "GLiClass zero-shot text classification in pure Rust with candle, no Python or ONNX",
-    "language": "Rust",
-    "pushed_at": "2026-11-21T05:44:54Z"
-  },
-  {
     "name": "handy-type",
     "private": false,
     "visibility": "public",
@@ -21,7 +9,91 @@
     "homepage": null,
     "description": "Fast dictation typing for Handy on Wayland (sway, Hyprland): types speech-to-text output as real key presses, no clipboard paste box. Plus a live caption demo with an animated LLM cleanup.",
     "language": "Rust",
-    "pushed_at": "2026-11-21T03:52:19Z"
+    "pushed_at": "2026-11-26T15:31:11Z"
+  },
+  {
+    "name": "tonywonguf.github.io",
+    "private": false,
+    "visibility": "public",
+    "fork": false,
+    "archived": false,
+    "html_url": "https://github.com/tonywonguf/tonywonguf.github.io",
+    "homepage": "https://tonywonguf.github.io",
+    "description": "Personal website of Tony Wong, built each day from public GitHub repos",
+    "language": "JavaScript",
+    "pushed_at": "2026-11-25T08:29:08Z"
+  },
+  {
+    "name": "gliclass-candle",
+    "private": false,
+    "visibility": "public",
+    "fork": false,
+    "archived": false,
+    "html_url": "https://github.com/tonywonguf/gliclass-candle",
+    "homepage": null,
+    "description": "GLiClass zero-shot text classification in pure Rust with candle, no Python or ONNX",
+    "language": "Rust",
+    "pushed_at": "2026-11-25T04:01:25Z"
+  },
+  {
+    "name": "claude-work-setup",
+    "private": false,
+    "visibility": "public",
+    "fork": false,
+    "archived": false,
+    "html_url": "https://github.com/tonywonguf/claude-work-setup",
+    "homepage": null,
+    "description": "Claude Code rules, lean agents and a plain-English skill for a machine with no hooks, plugins or MCP servers",
+    "language": "Shell",
+    "pushed_at": "2026-11-23T07:21:14Z"
+  },
+  {
+    "name": "kumodesu",
+    "private": false,
+    "visibility": "public",
+    "fork": false,
+    "archived": false,
+    "html_url": "https://github.com/tonywonguf/kumodesu",
+    "homepage": null,
+    "description": "So I'm a skill router, so what? A local hook that gives Claude Code the right skills for each prompt.",
+    "language": "Python",
+    "pushed_at": "2026-11-23T06:15:21Z"
+  },
+  {
+    "name": "saola-mac",
+    "private": false,
+    "visibility": "public",
+    "fork": false,
+    "archived": false,
+    "html_url": "https://github.com/tonywonguf/saola-mac",
+    "homepage": null,
+    "description": "saola for macOS: local voice dictation with Handy, S1-mini cleanup and handy-guard. brew install tonywonguf/saola/saola",
+    "language": "Rust",
+    "pushed_at": "2026-11-23T05:25:10Z"
+  },
+  {
+    "name": "homebrew-saola",
+    "private": false,
+    "visibility": "public",
+    "fork": false,
+    "archived": false,
+    "html_url": "https://github.com/tonywonguf/homebrew-saola",
+    "homepage": null,
+    "description": "Homebrew tap for saola for macOS: brew install tonywonguf/saola/saola",
+    "language": "Ruby",
+    "pushed_at": "2026-11-23T05:22:43Z"
+  },
+  {
+    "name": "saola",
+    "private": false,
+    "visibility": "public",
+    "fork": false,
+    "archived": false,
+    "html_url": "https://github.com/tonywonguf/saola",
+    "homepage": null,
+    "description": "Local voice dictation for Linux on Wayland: push a key, speak, clean text types into the focused window. Parakeet + S1-mini, no cloud.",
+    "language": "Rust",
+    "pushed_at": "2026-11-23T04:40:42Z"
   },
   {
     "name": "handy-glow",
