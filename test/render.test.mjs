@@ -106,3 +106,34 @@ test("the built page is under the first-load budget", async (t) => {
     bytes += (await stat(new URL(`fonts/${f}`, dist))).size;
   assert.ok(bytes < 100 * 1024, `first load is ${bytes} bytes`);
 });
+
+test("the koi pond is one section after the other parts, with the credits and no early request", () => {
+  const { html } = build([repo("a")]);
+  const pond = html.match(/<section class="part pond" id="pond"[\s\S]*?<\/section>/);
+  assert.ok(pond, "the pond section is missing");
+  assert.ok(html.indexOf('id="pond"') > html.indexOf('id="ai"'), "the pond is not after the AI part");
+  assert.match(pond[0], /<canvas id="koi" role="img" aria-label="[^"]+"><\/canvas>/);
+  assert.match(pond[0], /href="https:\/\/github.com\/yalongwastaken\/git-koi">git-koi<\/a> \(MIT License, Anthony Yalong\)/);
+  assert.match(pond[0], /href="https:\/\/grainrad.com">grainrad.com<\/a>/);
+  assert.match(pond[0], /href="koi\/NOTICE.txt"/);
+  // The renderer and the swim sheet are not in the first load: the page does not name them.
+  assert.doesNotMatch(html, /koi-grain\.js|white-swim|koi\.json/);
+});
+
+test("the built site has the koi files, and app.js gets the renderer only with a dynamic import", async (t) => {
+  const dist = new URL("../dist/", import.meta.url);
+  let app;
+  try {
+    app = await readFile(new URL("app.js", dist), "utf8");
+  } catch {
+    t.skip("dist/ is not built");
+    return;
+  }
+  for (const f of ["koi-grain.js", "koi-motion.js", "koi.json", "white-swim.json", "white-swim.webp", "NOTICE.txt", "git-koi-LICENSE.txt", "LICENSE.txt"])
+    await stat(new URL(`koi/${f}`, dist));
+  const manifest = JSON.parse(await readFile(new URL("koi/koi.json", dist), "utf8"));
+  assert.deepEqual(Object.keys(manifest.bodies), ["white"]);
+  assert.match(app, /new IntersectionObserver\(/);
+  assert.match(app, /await import\(\s*new URL\("koi\/koi-grain\.js"/);
+  assert.match(app, /effect: "bayer",\s*cell: 3,\s*grain: 0\.04/);
+});

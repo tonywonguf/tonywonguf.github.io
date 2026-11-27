@@ -742,3 +742,27 @@ body {
   pointer-events: auto;
   cursor: crosshair;
 }
+
+/* Koi pond. The canvas has a fixed aspect ratio, so the koi does not move the layout when it starts.
+   Until the renderer loads, the canvas shows the water color only. */
+.pond canvas {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 7;
+  border-radius: 6px;
+  background: #0f2a31;
+  touch-action: manipulation;
+}
+.pond.on canvas {
+  cursor: crosshair;
+}
+.pond .credit {
+  margin: 0.9rem 0 0;
+  font: 0.8125rem/1.7 var(--mono);
+  color: var(--muted);
+}
+@media (max-width: 46rem) {
+  .pond canvas {
+    aspect-ratio: 4 / 3;
+  }
+}

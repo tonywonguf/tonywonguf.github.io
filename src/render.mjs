@@ -210,6 +210,17 @@ export function renderPage({ site, recent, earlier, now, css, script, fonts }) {
         <div class="part-head"><h2 id="t-ai">How I use AI</h2></div>${notes(site.ai)}
       </div>
     </section>
+
+    <section class="part pond" id="pond" aria-labelledby="t-pond">
+      <div class="wrap">
+        <div class="part-head">
+          <h2 id="t-pond">My koi</h2>
+          <span class="count">drawn from my GitHub activity</span>
+        </div>
+        <canvas id="koi" role="img" aria-label="A pixel-art koi swims in a grainy pond. Its colors and size come from my GitHub activity."></canvas>
+        <p class="credit">Click the water to feed the koi. The koi is drawn by <a href="https://github.com/yalongwastaken/git-koi">git-koi</a> (MIT License, Anthony Yalong). The grain and dither look is inspired by <a href="https://grainrad.com">grainrad.com</a>. No code from grainrad.com is used. <a href="koi/NOTICE.txt">Notice and licenses</a>.</p>
+      </div>
+    </section>
   </main>
   <footer class="wrap foot">
     <p>This page is built from my public GitHub repositories. Last build: ${day(now)}.</p>

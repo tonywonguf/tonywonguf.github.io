@@ -1,0 +1,37 @@
+{
+  "bodies": {
+    "white": {
+      "swim": {
+        "bytes": 130266,
+        "meta": "white-swim.json",
+        "src": "white-swim.webp"
+      }
+    }
+  },
+  "generator": "koi-grain, drawn by git-koi (MIT, Anthony Yalong)",
+  "info": {
+    "behavior": "dart",
+    "languages": [
+      {
+        "name": "Rust",
+        "share": 0.26
+      },
+      {
+        "name": "JavaScript",
+        "share": 0.16
+      },
+      {
+        "name": "C++",
+        "share": 0.11
+      },
+      {
+        "name": "Python",
+        "share": 0.11
+      }
+    ],
+    "longest_streak_weeks": 12,
+    "observed_on": "2026-11-26",
+    "quiet_days": 0,
+    "total_contributions": 1206
+  }
+}
