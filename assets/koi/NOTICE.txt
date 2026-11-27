@@ -1,0 +1,16 @@
+koi-grain
+Copyright (c) 2026 Tony Wong. MIT License, see LICENSE.
+
+This project uses git-koi as a library:
+  git-koi, Copyright (c) 2026 Anthony Yalong
+  https://github.com/yalongwastaken/git-koi (commit 3d2661c)
+  MIT License, see LICENSES/git-koi-MIT.txt
+The koi frames in web/koi/ are drawn by git-koi. Each copy of those frames, of a
+build that contains git-koi, or of a substantial part of git-koi must include the
+git-koi copyright notice and license text.
+
+Visual inspiration:
+  grainrad.com, a free browser tool by Alim.
+  No code, shader, image or other asset of grainrad.com is in this project.
+  The effects use public image-processing methods (ordered dither, halftone,
+  ASCII ramps, film grain), written for this project.

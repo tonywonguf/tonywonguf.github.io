@@ -20,6 +20,8 @@ The script does not list forks, archived repositories, or the names in `projects
 | `src/carousel.js` | The script of the project carousel: an endless loop that you move with a mouse drag, a touch swipe, a trackpad, the arrow keys or the buttons. |
 | `src/art.mjs` | The colored ASCII art: the turkey, the tree and the reindeer |
 | `src/site.js` | The stage and the dither effects: the art as glyphs on a canvas (a click throws them, the mouse pushes them), the dithered ground, the grain, the dithered covers and the glow behind the name |
+| `src/koi.js` | The lazy start of the koi pond. When the pond section comes near the screen, it imports `koi/koi-grain.js` and starts the koi |
+| `assets/koi/` | The koi-grain renderer, one swim sheet and the license files, from github.com/tonywonguf/koi-grain at commit 71c1db3. `assets/koi/README.txt` gives the source of each file |
 | `assets/fonts/` | Schibsted Grotesk, cut to Latin characters (SIL Open Font License) |
 | `perf/` | The speed gate and the screenshot tools. The site does not use them. |
 
@@ -54,6 +56,7 @@ These rules keep the page in the budget:
 - The build puts all scripts in `dist/app.js`. The page asks for it 0.9 s after the load event, so the script does not delay the fonts or the first paint. The effects start in idle time, in jobs of at most 6 ms.
 - The fonts use `font-display: optional`. If a font is late, the browser keeps the system font and the text does not move.
 - The project carousel is a scroll container with snap points, so it works without the script. The script stops the scroll and moves the slides with transforms, so the loop has no start and no end. Without the script, the project covers are CSS gradients. The script draws each cover again as a small dithered canvas, so the covers add no image request.
+- The koi pond is the last section. The renderer and the swim sheet are approximately 150 KB, thus they are not in the first load. `src/koi.js` gets them only when the pond comes near the screen. The canvas has a fixed aspect ratio, so the koi does not move the layout.
 
 ## Publish
 

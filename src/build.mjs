@@ -94,6 +94,7 @@ const input = {
       await readFile(path("src/carousel.js"), "utf8"),
       ...["turkey", "tree", "reindeer", "frameHtml"].map((n) => art[n].toString()),
       await readFile(path("src/site.js"), "utf8"),
+      await readFile(path("src/koi.js"), "utf8"),
     ].join("\n"),
   ),
   fonts,
@@ -106,6 +107,9 @@ await writeFile(path("dist/llms.txt"), renderLlms(input));
 await writeFile(path("dist/app.js"), input.script);
 for (const f of [...fonts, "OFL.txt"])
   await cp(path(`assets/fonts/${f}`), path(`dist/fonts/${f}`));
+// The koi pond: the koi-grain renderer, one swim sheet and the license files.
+// The page gets these files only when the pond section comes near the screen (src/koi.js).
+await cp(path("assets/koi"), path("dist/koi"), { recursive: true });
 console.log(
   `Built dist/index.html: ${recent.length} recent, ${earlier.length} earlier, ${refused.length} not listed.`,
 );
