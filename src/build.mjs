@@ -85,6 +85,10 @@ const input = {
   now,
   css: minifyCss(await readFile(path("src/style.css"), "utf8")),
   // The carousel, then the art functions (as source) and the stage that uses them.
+  // They go to dist/app.js. The page loads it 0.9 s after the load event: inline, the gzipped page
+  // would not fit in the first TCP window (about 14 KB), and as an early request it would delay
+  // the fonts and so the largest paint. On a fast computer the load event comes before the largest
+  // paint, so the page waits 0.9 s more. Until app.js runs, the carousel is a scroll-snap track.
   script: minifyJs(
     [
       await readFile(path("src/carousel.js"), "utf8"),
@@ -99,6 +103,7 @@ await rm(path("dist"), { recursive: true, force: true });
 await mkdir(path("dist/fonts"), { recursive: true });
 await writeFile(path("dist/index.html"), renderPage(input));
 await writeFile(path("dist/llms.txt"), renderLlms(input));
+await writeFile(path("dist/app.js"), input.script);
 for (const f of [...fonts, "OFL.txt"])
   await cp(path(`assets/fonts/${f}`), path(`dist/fonts/${f}`));
 console.log(

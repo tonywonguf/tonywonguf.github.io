@@ -105,7 +105,7 @@ for (const [name, vp] of [
     await p.mouse.move(box.x, y);
     await p.mouse.down();
     for (let i = 1; i <= 5; i++) {
-      await p.mouse.move(box.x - 60 * i, y);
+      await p.mouse.move(box.x - 90 * i, y);
       await wait(8);
     }
     await p.mouse.up();

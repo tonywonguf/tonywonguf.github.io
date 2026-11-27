@@ -113,6 +113,14 @@ for (let i = 0; i < runs; i++) {
       `  long tasks: ${tasks.join("; ")}\n  main thread: ${work.join(", ")}`,
     );
   }
+  if (i === 0) {
+    // The element that gave the largest paint, and the phases of its time.
+    const el = a["largest-contentful-paint-element"]?.details?.items || [];
+    for (const it of el) {
+      if (it.items?.[0]?.node) console.log(`  lcp element: ${it.items[0].node.snippet}`);
+      else if (it.items?.length) console.log(`  lcp phases: ${it.items.map((p) => `${p.phase} ${Math.round(p.timing)}`).join(", ")}`);
+    }
+  }
   if (i === 0)
     for (const id of new Set(failed))
       for (const item of (a[id].details?.items || []).slice(0, 4))

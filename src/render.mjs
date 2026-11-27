@@ -215,7 +215,7 @@ export function renderPage({ site, recent, earlier, now, css, script, fonts }) {
     <p>This page is built from my public GitHub repositories. Last build: ${day(now)}.</p>
     <p><a href="${esc(site.links.github)}/${esc(site.githubUser)}.github.io">Source</a> · <a href="llms.txt">llms.txt</a> (this page as plain text, for AI assistants)</p>
   </footer>
-  <script>${script}</script>
+  <script>addEventListener("load",()=>setTimeout(()=>document.body.append(Object.assign(document.createElement("script"),{src:"app.js"})),900))</script>
 </body>
 </html>
 `;

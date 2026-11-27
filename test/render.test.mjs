@@ -65,7 +65,9 @@ test("the page has the parts that the tests of the speed budget need", () => {
   assert.match(html, /<h1 id="name">Tony Wong<\/h1>/);
   assert.equal((html.match(/rel="preload"/g) || []).length, fonts.length);
   assert.match(html, /href="https:\/\/b.example">Live site/);
+  // No script file blocks the first paint: the page asks for app.js only after the load event.
   assert.doesNotMatch(html, /<script src=/);
+  assert.match(html, /addEventListener\("load",[^<]*src:"app.js"\}\)\),900\)/);
   assert.doesNotMatch(html, /<link rel="stylesheet"/);
 });
 
@@ -97,6 +99,9 @@ test("the built page is under the first-load budget", async (t) => {
     return;
   }
   let bytes = gzipSync(html).length;
+  // The page must fit in the first TCP window, so the first paint needs one round trip.
+  assert.ok(bytes < 14 * 1024, `the gzipped page is ${bytes} bytes`);
+  bytes += gzipSync(await readFile(new URL("app.js", dist))).length;
   for (const f of fonts)
     bytes += (await stat(new URL(`fonts/${f}`, dist))).size;
   assert.ok(bytes < 100 * 1024, `first load is ${bytes} bytes`);
