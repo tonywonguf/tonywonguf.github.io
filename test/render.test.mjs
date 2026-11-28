@@ -110,15 +110,15 @@ test("the built page is under the first-load budget", async (t) => {
   assert.ok(bytes < 100 * 1024, `first load is ${bytes} bytes`);
 });
 
-test("with the real settings, the site lists only saola and MiiToast", () => {
+test("with the real settings, the site lists only saola and miltoast", () => {
   const names = [
-    "saola", "MiiToast", "saola-mac", "homebrew-saola", "kumodesu",
+    "saola", "miltoast", "saola-mac", "homebrew-saola", "kumodesu",
     "handy-type", "NextAnime", "griffin_game", "meetily",
   ];
   const { recent, earlier } = selectRepos(names.map((n) => repo(n)), site.projects, now);
   assert.deepEqual(
     [...recent, ...earlier].map((r) => r.name).sort(),
-    ["MiiToast", "saola"],
+    ["miltoast", "saola"],
   );
 });
 
