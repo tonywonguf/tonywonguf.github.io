@@ -31,6 +31,18 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       # Do the tests again on the built page. The test of the first-load budget needs dist/.
       - run: npm test
+      # Drive the built page in Chrome before the deploy. These checks wait for app.js,
+      # so a page whose script does not start, or a carousel that stops at an end, fails here.
+      - run: npm install --no-save puppeteer-core@24.43.1
+      - name: browser checks on dist
+        env:
+          CHROME_PATH: /usr/bin/google-chrome
+        run: |
+          python3 -m http.server 8765 -b 127.0.0.1 --directory dist >/dev/null 2>&1 &
+          sleep 1
+          node perf/cardcheck.mjs dist
+          node perf/smoke.mjs http://127.0.0.1:8765/
+          node perf/carouselcheck.mjs http://127.0.0.1:8765/
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist
@@ -38,9 +50,29 @@ jobs:
   deploy:
     needs: build
     runs-on: ubuntu-latest
+    outputs:
+      page_url: ${{ steps.deployment.outputs.page_url }}
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - id: deployment
         uses: actions/deploy-pages@v4
+
+  # After the deploy, check the live site. A failure here shows that the live page does not work.
+  live:
+    needs: deploy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm install --no-save puppeteer-core@24.43.1
+      - name: smoke check on the live site
+        env:
+          CHROME_PATH: /usr/bin/google-chrome
+          URL: ${{ needs.deploy.outputs.page_url }}
+        run: |
+          sleep 30
+          node perf/smoke.mjs "$URL"

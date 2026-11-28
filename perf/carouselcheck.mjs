@@ -26,6 +26,8 @@ for (const [name, vp] of [
   p.on("console", (m) => m.type() === "error" && errors.push(m.text()));
   await p.setViewport(vp);
   await p.goto(url, { waitUntil: "load" });
+  // The page loads app.js 0.9 s after the load event. Wait for it, or the check tests the page with no script.
+  await p.waitForSelector(".carousel.js", { timeout: 8000 });
   const state = () =>
     p.evaluate(() => {
       const s = [...document.querySelectorAll(".slide")];
@@ -166,6 +168,8 @@ for (const [name, vp] of [
   ]);
   await p.setViewport({ width: 1440, height: 900 });
   await p.goto(url, { waitUntil: "load" });
+  // The page loads app.js 0.9 s after the load event. Wait for it, or the check tests the page with no script.
+  await p.waitForSelector(".carousel.js", { timeout: 8000 });
   await p.focus("#track");
   await p.keyboard.press("ArrowRight");
   const a = await p.evaluate(
