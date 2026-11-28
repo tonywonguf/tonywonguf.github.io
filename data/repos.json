@@ -1,17 +1,5 @@
 [
   {
-    "name": "handy-type",
-    "private": false,
-    "visibility": "public",
-    "fork": false,
-    "archived": false,
-    "html_url": "https://github.com/tonywonguf/handy-type",
-    "homepage": null,
-    "description": "Fast dictation typing for Handy on Wayland (sway, Hyprland): types speech-to-text output as real key presses, no clipboard paste box. Plus a live caption demo with an animated LLM cleanup.",
-    "language": "Rust",
-    "pushed_at": "2026-11-26T15:31:11Z"
-  },
-  {
     "name": "tonywonguf.github.io",
     "private": false,
     "visibility": "public",
@@ -21,43 +9,7 @@
     "homepage": "https://tonywonguf.github.io",
     "description": "Personal website of Tony Wong, built each day from public GitHub repos",
     "language": "JavaScript",
-    "pushed_at": "2026-11-25T08:29:08Z"
-  },
-  {
-    "name": "gliclass-candle",
-    "private": false,
-    "visibility": "public",
-    "fork": false,
-    "archived": false,
-    "html_url": "https://github.com/tonywonguf/gliclass-candle",
-    "homepage": null,
-    "description": "GLiClass zero-shot text classification in pure Rust with candle, no Python or ONNX",
-    "language": "Rust",
-    "pushed_at": "2026-11-25T04:01:25Z"
-  },
-  {
-    "name": "claude-work-setup",
-    "private": false,
-    "visibility": "public",
-    "fork": false,
-    "archived": false,
-    "html_url": "https://github.com/tonywonguf/claude-work-setup",
-    "homepage": null,
-    "description": "Claude Code rules, lean agents and a plain-English skill for a machine with no hooks, plugins or MCP servers",
-    "language": "Shell",
-    "pushed_at": "2026-11-23T07:21:14Z"
-  },
-  {
-    "name": "kumodesu",
-    "private": false,
-    "visibility": "public",
-    "fork": false,
-    "archived": false,
-    "html_url": "https://github.com/tonywonguf/kumodesu",
-    "homepage": null,
-    "description": "So I'm a skill router, so what? A local hook that gives Claude Code the right skills for each prompt.",
-    "language": "Python",
-    "pushed_at": "2026-11-23T06:15:21Z"
+    "pushed_at": "2026-11-28T00:49:17Z"
   },
   {
     "name": "saola-mac",
@@ -96,18 +48,6 @@
     "pushed_at": "2026-11-23T04:40:42Z"
   },
   {
-    "name": "handy-glow",
-    "private": false,
-    "visibility": "public",
-    "fork": false,
-    "archived": false,
-    "html_url": "https://github.com/tonywonguf/handy-glow",
-    "homepage": null,
-    "description": "A glow around the screen edges while Handy records your voice, so you always know that the microphone is on. Wayland layer-shell overlay, GPU shader, Rust.",
-    "language": "Rust",
-    "pushed_at": "2026-11-21T02:36:41Z"
-  },
-  {
     "name": "iina-airplay",
     "private": false,
     "visibility": "public",
@@ -118,18 +58,6 @@
     "description": "AirPlay for IINA — cast the video you're watching to an Apple TV from macOS. No screen mirroring, no re-encode. Remuxes to HLS on your LAN; IINA stays the remote.",
     "language": null,
     "pushed_at": "2026-11-14T22:27:10Z"
-  },
-  {
-    "name": "cli-web-niadb",
-    "private": false,
-    "visibility": "public",
-    "fork": false,
-    "archived": false,
-    "html_url": "https://github.com/tonywonguf/cli-web-niadb",
-    "homepage": null,
-    "description": "Agent-ready CLI companion for MapleStory Classic World data and the NiaDB (formerly MeowDB) marketplace",
-    "language": null,
-    "pushed_at": "2026-11-10T19:13:17Z"
   },
   {
     "name": "meetily",
@@ -178,101 +106,5 @@
     "description": "The Free Software Media System - Server Backend & API",
     "language": null,
     "pushed_at": "2026-10-19T01:25:20Z"
-  },
-  {
-    "name": "Lab_5",
-    "private": false,
-    "visibility": "public",
-    "fork": false,
-    "archived": false,
-    "html_url": "https://github.com/tonywonguf/Lab_5",
-    "homepage": null,
-    "description": null,
-    "language": "C",
-    "pushed_at": "2023-10-11T22:00:51Z"
-  },
-  {
-    "name": "CaSMM",
-    "private": false,
-    "visibility": "public",
-    "fork": false,
-    "archived": false,
-    "html_url": "https://github.com/tonywonguf/CaSMM",
-    "homepage": null,
-    "description": null,
-    "language": "JavaScript",
-    "pushed_at": "2023-10-02T04:29:55Z"
-  },
-  {
-    "name": "Creatorverse",
-    "private": false,
-    "visibility": "public",
-    "fork": false,
-    "archived": false,
-    "html_url": "https://github.com/tonywonguf/Creatorverse",
-    "homepage": "https://creatorverse-mu.vercel.app",
-    "description": null,
-    "language": "CSS",
-    "pushed_at": "2023-08-23T04:14:32Z"
-  },
-  {
-    "name": "NextAnime",
-    "private": false,
-    "visibility": "public",
-    "fork": false,
-    "archived": false,
-    "html_url": "https://github.com/tonywonguf/NextAnime",
-    "homepage": "https://next-anime-seven.vercel.app",
-    "description": null,
-    "language": "TypeScript",
-    "pushed_at": "2023-07-19T19:40:29Z"
-  },
-  {
-    "name": "griffin_game",
-    "private": false,
-    "visibility": "public",
-    "fork": false,
-    "archived": false,
-    "html_url": "https://github.com/tonywonguf/griffin_game",
-    "homepage": null,
-    "description": "Project for HackHarvard 2022",
-    "language": "JavaScript",
-    "pushed_at": "2022-10-16T11:45:35Z"
-  },
-  {
-    "name": "Personal-Projects",
-    "private": false,
-    "visibility": "public",
-    "fork": false,
-    "archived": false,
-    "html_url": "https://github.com/tonywonguf/Personal-Projects",
-    "homepage": null,
-    "description": null,
-    "language": "Python",
-    "pushed_at": "2022-09-16T15:36:05Z"
-  },
-  {
-    "name": "Archived-Code-CP",
-    "private": false,
-    "visibility": "public",
-    "fork": false,
-    "archived": false,
-    "html_url": "https://github.com/tonywonguf/Archived-Code-CP",
-    "homepage": null,
-    "description": null,
-    "language": "C++",
-    "pushed_at": "2022-09-14T21:47:54Z"
-  },
-  {
-    "name": "UFPT",
-    "private": false,
-    "visibility": "public",
-    "fork": false,
-    "archived": false,
-    "html_url": "https://github.com/tonywonguf/UFPT",
-    "homepage": null,
-    "description": null,
-    "language": "C++",
-    "pushed_at": "2022-09-09T22:32:26Z"
   }
 ]

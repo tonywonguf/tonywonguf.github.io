@@ -29,7 +29,7 @@ let live = true;
 try {
   await p.waitForFunction(
     () =>
-      document.querySelector(".carousel.js") &&
+      (document.querySelector(".carousel.js") || !document.querySelector(".carousel")) &&
       document.getElementById("stage")?.classList.contains("live"),
     { timeout: 10000 },
   );

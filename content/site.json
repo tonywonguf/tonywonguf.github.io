@@ -6,7 +6,13 @@
   "intro": "I am an engineer. I build local AI and agent tools for Linux, mostly in Rust.",
   "headline": "I build *local AI* and agent tools for Linux, mostly in Rust.",
   "education": "B.S. in Computer Science and Statistics, University of Florida, 2026",
-  "languages": ["Rust", "Go", "C++", "C", "Python"],
+  "languages": [
+    "Rust",
+    "Go",
+    "C++",
+    "C",
+    "Python"
+  ],
   "links": {
     "github": "https://github.com/tonywonguf",
     "linkedin": "https://www.linkedin.com/in/tony-wong-uf"
@@ -23,17 +29,12 @@
   "projects": {
     "recentDays": 120,
     "exclude": [
-      "tonywonguf.github.io",
-      "Lab_5",
-      "UFPT",
-      "Archived-Code-CP",
-      "Personal-Projects",
-      "CaSMM",
-      "Creatorverse"
+      "tonywonguf.github.io"
     ],
-    "blurbs": {
-      "griffin_game": "A web game about the Angel Problem of John Conway. Made at HackHarvard 2022.",
-      "NextAnime": "An anime web app made with Next.js by a team of three."
-    }
+    "blurbs": {},
+    "include": [
+      "saola",
+      "MiiToast"
+    ]
   }
 }

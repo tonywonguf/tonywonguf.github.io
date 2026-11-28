@@ -54,8 +54,8 @@ const coverStyle = (r) => {
 // The big letters on the cover: the first part of the name, at most 6 characters.
 const mark = (name) => name.split(/[-_.]/)[0].slice(0, 6);
 
-const slide = (r, i, total) => `
-          <div class="slide${i === 0 ? " on" : ""}" id="${slug(r.name)}" role="group" aria-roledescription="slide" aria-label="${i + 1} of ${total}: ${esc(r.name)}">
+const slide = (r, i, total, inCarousel = true) => `
+          <div class="slide${i === 0 || !inCarousel ? " on" : ""}" id="${slug(r.name)}"${inCarousel ? ` role="group" aria-roledescription="slide" aria-label="${i + 1} of ${total}: ${esc(r.name)}"` : ""}>
             <a class="cover" href="${esc(r.url)}" style="${coverStyle(r)}" tabindex="-1" aria-hidden="true">
               <span class="cover-mark">${esc(mark(r.name))}</span>
               <span class="cover-lang">${esc(r.language || "repo")}</span>
@@ -81,6 +81,12 @@ const carousel = (items) => `
             <p class="pos" aria-live="polite"><span id="pos">01</span> / ${pad(items.length)}</p>
             <button type="button" class="nav" id="next" aria-label="Next project">&#8594;</button>
           </div>
+        </div>`;
+
+// An endless carousel needs at least 3 projects. With fewer, the page shows each project as a card.
+export const MIN_CAROUSEL = 3;
+const cards = (items) => `
+        <div class="cards">${items.map((r, i) => slide(r, i, items.length, false)).join("")}
         </div>`;
 
 const row = (r) => `
@@ -186,7 +192,9 @@ export function renderPage({ site, recent, earlier, now, css, script, fonts }) {
         </div>
         ${
           recent.length
-            ? carousel(recent)
+            ? recent.length >= MIN_CAROUSEL
+              ? carousel(recent)
+              : cards(recent)
             : `<p>No public projects were updated recently. Older work is below.</p>`
         }${
           earlier.length

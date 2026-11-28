@@ -1,7 +1,8 @@
 // Make sure that the project carousel loops, and that each input moves it:
 // buttons, arrow keys, mouse drag, a fast flick, touch swipe and horizontal wheel.
 // Also make sure that it has no progress bar, and that reduced motion stops the glide.
-// Usage: node perf/carouselcheck.mjs URL
+// Usage: node perf/carouselcheck.mjs URL [--need-carousel]
+// With --need-carousel, a page with no carousel fails. Use it on the 9-project test build.
 import puppeteer from "puppeteer-core";
 
 const url = process.argv[2];
@@ -26,6 +27,18 @@ for (const [name, vp] of [
   p.on("console", (m) => m.type() === "error" && errors.push(m.text()));
   await p.setViewport(vp);
   await p.goto(url, { waitUntil: "load" });
+  if (!(await p.$("#track"))) {
+    if (process.argv.includes("--need-carousel")) {
+      console.log("FAIL no carousel on this page, but --need-carousel is set");
+      await b.close();
+      process.exit(1);
+    }
+    // With fewer than 3 projects the page shows cards (src/render.mjs MIN_CAROUSEL).
+    // test/render.test.mjs makes sure that 3 or more projects give a carousel.
+    console.log("SKIP no carousel on this page (fewer than 3 projects)");
+    await b.close();
+    process.exit(0);
+  }
   // The page loads app.js 0.9 s after the load event. Wait for it, or the check tests the page with no script.
   await p.waitForSelector(".carousel.js", { timeout: 8000 });
   const state = () =>

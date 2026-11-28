@@ -9,6 +9,8 @@ The tools in this folder measure the site. The site does not use them, and the w
 | `gate.mjs` | Serves `dist/` with gzip (or measures a URL) and runs Lighthouse on a simulated phone. It also prints the element of the largest paint. It gives the median of each value and exits with 1 if a value is outside the budget. |
 | `shots.mjs` | Makes screenshots at phone, tablet and desktop width, in the light and the dark color scheme. |
 | `carouselcheck.mjs` | Makes sure that the project carousel loops and has no progress bar. It also makes sure that the buttons, the arrow keys, a mouse drag, a fast flick, a touch swipe and a horizontal wheel move it, and that reduced motion stops the glide. |
+| `smoke.mjs` | Makes sure that the page script starts, that each request answers with a status under 400, and that the console has no errors. The workflow runs it on `dist/` before the deploy and on the live site after the deploy. |
+| `cardcheck.mjs` | Makes sure that a copy of the site (for example the Playground card folder) has each file that the page asks for, `app.js` included. It needs no browser. |
 | `effectcheck.mjs` | Makes sure that the dither effects start (covers, glow, glyph canvas), that a click throws the glyphs and they come home, that reduced motion keeps the stage still, and that the winter art turns. It saves screenshots. |
 | `remote.sh` | Copies `dist/` and `perf/` to the laptop (ssh host `gpu-node`) and runs one tool there. |
 
@@ -18,10 +20,10 @@ The tools need Node.js, a Chromium binary in `CHROME_PATH`, and the packages `li
 
 ## Measure the budget
 
-1. Build the site with `npm run build:offline`.
+1. Build the site with `npm run build:offline`. To test the carousel, build the test list of 9 projects: `npm run build:offline -- --data test/fixtures/repos-9.json --no-include`.
 2. Run `perf/remote.sh gate 5` to do five Lighthouse runs on the laptop.
 3. Run `perf/remote.sh shots` to make the screenshots. They go to `~/.cache/site-rewrite/ours`.
-4. Run `perf/remote.sh carouselcheck.mjs` to do a test of the carousel.
+4. Run `perf/remote.sh carouselcheck.mjs` to do a test of the carousel. The checks wait for `app.js`, which the page loads 0.9 s after the load event.
 5. Run `OUT=DIR perf/remote.sh effectcheck.mjs` to do a test of the effects. The screenshots go to DIR.
 6. After a publish, run `perf/remote.sh gate-url https://tonywonguf.github.io/ 5` to measure the live site. The live result includes the real network time to GitHub Pages.
 

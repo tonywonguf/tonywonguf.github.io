@@ -6,7 +6,7 @@ This repository makes the personal website of Tony Wong. The site is one static 
 
 The build script reads the list of repositories from the GitHub API. The endpoint `/users/tonywonguf/repos` gives only public repositories. The script also examines the `private` and `visibility` fields of each repository. If a repository is not public, the script does not list it and writes its name in a warning.
 
-The script does not list forks, archived repositories, or the names in `projects.exclude` in `content/site.json`. Repositories with a push in the last 120 days go in "What I build". Older repositories go in "Earlier work".
+The script does not list forks, archived repositories, or the names in `projects.exclude` in `content/site.json`. If `projects.include` is set, the script lists only the repositories in it, and only while GitHub reports them as public. With 3 or more projects, "What I build" is a carousel. With fewer, each project is a card. Repositories with a push in the last 120 days go in "What I build". Older repositories go in "Earlier work".
 
 ## Files
 

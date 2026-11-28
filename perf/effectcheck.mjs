@@ -54,8 +54,7 @@ for (const scheme of ["light", "dark"]) {
     ]);
     await p.setViewport(vp);
     await p.goto(url + "?season=turkey", { waitUntil: "load" });
-  await p.waitForSelector(".carousel.js, #stage.live", { timeout: 8000 });
-  await p.waitForFunction(() => document.querySelector(".carousel.js") && document.getElementById("stage")?.classList.contains("live"), { timeout: 8000 });
+  await p.waitForFunction(() => (document.querySelector(".carousel.js") || !document.querySelector(".carousel")) && document.getElementById("stage")?.classList.contains("live"), { timeout: 8000 });
     await wait(1500);
     const s = await p.evaluate(() => ({
       covers: document.querySelectorAll(".cover").length,
@@ -116,8 +115,7 @@ for (const scheme of ["light", "dark"]) {
   ]);
   await p.setViewport({ width: 1440, height: 900 });
   await p.goto(url, { waitUntil: "load" });
-  await p.waitForSelector(".carousel.js, #stage.live", { timeout: 8000 });
-  await p.waitForFunction(() => document.querySelector(".carousel.js") && document.getElementById("stage")?.classList.contains("live"), { timeout: 8000 });
+  await p.waitForFunction(() => (document.querySelector(".carousel.js") || !document.querySelector(".carousel")) && document.getElementById("stage")?.classList.contains("live"), { timeout: 8000 });
   await wait(1200);
   const a = await snap(p);
   await p.mouse.click(1000, 500);
@@ -135,8 +133,7 @@ for (const scheme of ["light", "dark"]) {
   const p = await b.newPage();
   await p.setViewport({ width: 1440, height: 900 });
   await p.goto(url + "?season=tree", { waitUntil: "load" });
-  await p.waitForSelector(".carousel.js, #stage.live", { timeout: 8000 });
-  await p.waitForFunction(() => document.querySelector(".carousel.js") && document.getElementById("stage")?.classList.contains("live"), { timeout: 8000 });
+  await p.waitForFunction(() => (document.querySelector(".carousel.js") || !document.querySelector(".carousel")) && document.getElementById("stage")?.classList.contains("live"), { timeout: 8000 });
   await wait(1500);
   await p.evaluate(() =>
     document.getElementById("stage").scrollIntoView({ block: "center" }),

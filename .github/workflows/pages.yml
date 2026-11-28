@@ -26,6 +26,18 @@ jobs:
         with:
           node-version: 22
       - run: npm test
+      - run: npm install --no-save puppeteer-core@24.43.1
+      # Build the test list of 9 projects (their dates are in 2099, so they always count as recent) and drive the carousel and the effects in Chrome.
+      # The real list can have fewer than 3 projects, and then the page has no carousel.
+      - name: browser checks on the 9-project test build
+        env:
+          CHROME_PATH: /usr/bin/google-chrome
+        run: |
+          node src/build.mjs --offline --data test/fixtures/repos-9.json --no-include
+          python3 -m http.server 8764 -b 127.0.0.1 --directory dist >/dev/null 2>&1 &
+          sleep 1
+          node perf/carouselcheck.mjs http://127.0.0.1:8764/ --need-carousel
+          mkdir -p /tmp/fx && node perf/effectcheck.mjs http://127.0.0.1:8764/ /tmp/fx
       - run: npm run build
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -33,7 +45,6 @@ jobs:
       - run: npm test
       # Drive the built page in Chrome before the deploy. These checks wait for app.js,
       # so a page whose script does not start, or a carousel that stops at an end, fails here.
-      - run: npm install --no-save puppeteer-core@24.43.1
       - name: browser checks on dist
         env:
           CHROME_PATH: /usr/bin/google-chrome

@@ -1,6 +1,8 @@
 // Build the site into dist/.
 // Usage: node src/build.mjs [--offline]
 // --offline uses data/repos.json from the last build and does not call GitHub.
+// --data FILE (with --offline) uses FILE instead, for example the test list of 9 projects.
+// --no-include ignores the include list of content/site.json. Only test builds use it.
 
 import { readFile, writeFile, mkdir, cp, rm } from "node:fs/promises";
 import { selectRepos } from "./repos.mjs";
@@ -29,7 +31,9 @@ async function fetchRepos(user) {
 
 let repos;
 if (offline) {
-  repos = JSON.parse(await readFile(path("data/repos.json"), "utf8"));
+  const at = process.argv.indexOf("--data");
+  const file = at > 0 ? process.argv[at + 1] : path("data/repos.json");
+  repos = JSON.parse(await readFile(file, "utf8"));
 } else {
   repos = await fetchRepos(site.githubUser);
   await mkdir(path("data"), { recursive: true });
@@ -53,7 +57,11 @@ if (offline) {
 }
 
 const now = new Date();
-const { recent, earlier, refused } = selectRepos(repos, site.projects, now);
+const { recent, earlier, refused } = selectRepos(
+  repos,
+  process.argv.includes("--no-include") ? { ...site.projects, include: undefined } : site.projects,
+  now,
+);
 if (refused.length)
   console.warn(
     `Not listed, because GitHub does not report them as public: ${refused.join(", ")}`,
