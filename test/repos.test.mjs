@@ -120,3 +120,38 @@ test("splits recent and earlier work, and uses a blurb when one is set", () => {
     ["Old game."],
   );
 });
+
+test("lists only the repos in the include list, and never a fork or a private repo", () => {
+  const pub = {
+    ...base,
+    private: false,
+    visibility: "public",
+    pushed_at: "2026-11-20T00:00:00Z",
+  };
+  const out = selectRepos(
+    [
+      { ...pub, name: "saola" },
+      { ...pub, name: "other" },
+      { ...pub, name: "MiiToast", private: true, visibility: "private" },
+      { ...pub, name: "fork", fork: true },
+    ],
+    { include: ["saola", "MiiToast", "fork"] },
+    now,
+  );
+  assert.deepEqual(
+    out.recent.map((r) => r.name),
+    ["saola"],
+  );
+  assert.deepEqual(out.refused, ["MiiToast"]);
+});
+
+test("without an include list, every public repo that is not excluded is listed", () => {
+  const pub = {
+    ...base,
+    private: false,
+    visibility: "public",
+    pushed_at: "2026-11-20T00:00:00Z",
+  };
+  const out = selectRepos([{ ...pub, name: "a" }, { ...pub, name: "b" }], {}, now);
+  assert.equal(out.recent.length, 2);
+});

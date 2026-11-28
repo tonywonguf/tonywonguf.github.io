@@ -1,5 +1,6 @@
 // Speed gate for the site.
-// Usage: node perf/gate.mjs [DIR] [RUNS]
+// Usage: node perf/gate.mjs [DIR|URL] [RUNS]
+// If the first argument starts with http, the gate measures that URL and does not start a server.
 // It serves DIR (default dist) with gzip, like GitHub Pages, and runs Lighthouse on a simulated phone RUNS times (default 3).
 // It prints the median of each value and exits with 1 if a value is outside the budget.
 // It needs the packages lighthouse and chrome-launcher, and CHROME_PATH set to a Chromium binary.
@@ -44,8 +45,9 @@ const server = http.createServer(async (req, res) => {
     res.writeHead(404).end("not found");
   }
 });
-await new Promise((r) => server.listen(0, "127.0.0.1", r));
-const url = `http://127.0.0.1:${server.address().port}/`;
+const remote = /^https?:\/\//.test(dir);
+if (!remote) await new Promise((r) => server.listen(0, "127.0.0.1", r));
+const url = remote ? dir : `http://127.0.0.1:${server.address().port}/`;
 
 const budget = {
   performance: [">=", 98],
@@ -111,6 +113,14 @@ for (let i = 0; i < runs; i++) {
       `  long tasks: ${tasks.join("; ")}\n  main thread: ${work.join(", ")}`,
     );
   }
+  if (i === 0) {
+    // The element that gave the largest paint, and the phases of its time.
+    const el = a["largest-contentful-paint-element"]?.details?.items || [];
+    for (const it of el) {
+      if (it.items?.[0]?.node) console.log(`  lcp element: ${it.items[0].node.snippet}`);
+      else if (it.items?.length) console.log(`  lcp phases: ${it.items.map((p) => `${p.phase} ${Math.round(p.timing)}`).join(", ")}`);
+    }
+  }
   if (i === 0)
     for (const id of new Set(failed))
       for (const item of (a[id].details?.items || []).slice(0, 4))
@@ -119,7 +129,7 @@ for (let i = 0; i < runs; i++) {
     `run ${i + 1}: ${JSON.stringify(r)}${failed.length ? ` low audits: ${[...new Set(failed)].join(", ")}` : ""}`,
   );
 }
-server.close();
+if (!remote) server.close();
 
 const median = (k) => {
   const v = results.map((r) => r[k]).sort((x, y) => x - y);

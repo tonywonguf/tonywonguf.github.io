@@ -1,6 +1,8 @@
 // Build the site into dist/.
 // Usage: node src/build.mjs [--offline]
 // --offline uses data/repos.json from the last build and does not call GitHub.
+// --data FILE (with --offline) uses FILE instead, for example the test list of 9 projects.
+// --no-include ignores the include list of content/site.json. Only test builds use it.
 
 import { readFile, writeFile, mkdir, cp, rm } from "node:fs/promises";
 import { selectRepos } from "./repos.mjs";
@@ -29,7 +31,9 @@ async function fetchRepos(user) {
 
 let repos;
 if (offline) {
-  repos = JSON.parse(await readFile(path("data/repos.json"), "utf8"));
+  const at = process.argv.indexOf("--data");
+  const file = at > 0 ? process.argv[at + 1] : path("data/repos.json");
+  repos = JSON.parse(await readFile(file, "utf8"));
 } else {
   repos = await fetchRepos(site.githubUser);
   await mkdir(path("data"), { recursive: true });
@@ -53,7 +57,11 @@ if (offline) {
 }
 
 const now = new Date();
-const { recent, earlier, refused } = selectRepos(repos, site.projects, now);
+const { recent, earlier, refused } = selectRepos(
+  repos,
+  process.argv.includes("--no-include") ? { ...site.projects, include: undefined } : site.projects,
+  now,
+);
 if (refused.length)
   console.warn(
     `Not listed, because GitHub does not report them as public: ${refused.join(", ")}`,
@@ -85,6 +93,10 @@ const input = {
   now,
   css: minifyCss(await readFile(path("src/style.css"), "utf8")),
   // The carousel, then the art functions (as source) and the stage that uses them.
+  // They go to dist/app.js. The page loads it 0.9 s after the load event: inline, the gzipped page
+  // would not fit in the first TCP window (about 14 KB), and as an early request it would delay
+  // the fonts and so the largest paint. On a fast computer the load event comes before the largest
+  // paint, so the page waits 0.9 s more. Until app.js runs, the carousel is a scroll-snap track.
   script: minifyJs(
     [
       await readFile(path("src/carousel.js"), "utf8"),
@@ -99,6 +111,7 @@ await rm(path("dist"), { recursive: true, force: true });
 await mkdir(path("dist/fonts"), { recursive: true });
 await writeFile(path("dist/index.html"), renderPage(input));
 await writeFile(path("dist/llms.txt"), renderLlms(input));
+await writeFile(path("dist/app.js"), input.script);
 for (const f of [...fonts, "OFL.txt"])
   await cp(path(`assets/fonts/${f}`), path(`dist/fonts/${f}`));
 console.log(

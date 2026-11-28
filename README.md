@@ -6,7 +6,7 @@ This repository makes the personal website of Tony Wong. The site is one static 
 
 The build script reads the list of repositories from the GitHub API. The endpoint `/users/tonywonguf/repos` gives only public repositories. The script also examines the `private` and `visibility` fields of each repository. If a repository is not public, the script does not list it and writes its name in a warning.
 
-The script does not list forks, archived repositories, or the names in `projects.exclude` in `content/site.json`. Repositories with a push in the last 120 days go in "What I build". Older repositories go in "Earlier work".
+The script does not list forks, archived repositories, or the names in `projects.exclude` in `content/site.json`. If `projects.include` is set, the script lists only the repositories in it, and only while GitHub reports them as public. With 3 or more projects, "What I build" is a carousel. With fewer, each project is a card. Repositories with a push in the last 120 days go in "What I build". Older repositories go in "Earlier work".
 
 ## Files
 
@@ -17,7 +17,9 @@ The script does not list forks, archived repositories, or the names in `projects
 | `src/repos.mjs` | The filter for public repositories |
 | `src/render.mjs` | Makes the HTML page and `llms.txt` |
 | `src/style.css` | The styles. The build puts them inline in the page. |
-| `src/carousel.js` | The script of the project carousel: arrow buttons, arrow keys, counter and bar. |
+| `src/carousel.js` | The script of the project carousel: an endless loop that you move with a mouse drag, a touch swipe, a trackpad, the arrow keys or the buttons. |
+| `src/art.mjs` | The colored ASCII art: the turkey, the tree and the reindeer |
+| `src/site.js` | The stage and the dither effects: the art as glyphs on a canvas (a click throws them, the mouse pushes them), the dithered ground, the grain, the dithered covers and the glow behind the name |
 | `assets/fonts/` | Schibsted Grotesk, cut to Latin characters (SIL Open Font License) |
 | `perf/` | The speed gate and the screenshot tools. The site does not use them. |
 
@@ -48,9 +50,10 @@ Each change must stay in this budget on a simulated phone (Lighthouse, mobile):
 
 These rules keep the page in the budget:
 
-- The page has one HTML file with the styles inline. It loads no script file and no stylesheet file.
+- The page has one HTML file with the styles inline. Gzipped, it must stay under 14 KB, so that it fits in the first TCP window. A test makes sure of this.
+- The build puts all scripts in `dist/app.js`. The page asks for it 0.9 s after the load event, so the script does not delay the fonts or the first paint. The effects start in idle time, in jobs of at most 6 ms.
 - The fonts use `font-display: optional`. If a font is late, the browser keeps the system font and the text does not move.
-- The project carousel is a scroll container with snap points, so it works without the script. The project covers use only CSS gradients, so they add no image request.
+- The project carousel is a scroll container with snap points, so it works without the script. The script stops the scroll and moves the slides with transforms, so the loop has no start and no end. Without the script, the project covers are CSS gradients. The script draws each cover again as a small dithered canvas, so the covers add no image request.
 
 ## Publish
 

@@ -9,6 +9,9 @@ const now = new Date("2026-11-22T00:00:00Z");
 const site = JSON.parse(
   await readFile(new URL("../content/site.json", import.meta.url), "utf8"),
 );
+// These tests check the page, not the include list (repos.test.mjs checks it),
+// so they use the real settings without the include list.
+const { include: _include, ...render } = site.projects;
 const repo = (name, extra = {}) => ({
   name,
   private: false,
@@ -29,7 +32,7 @@ const fonts = [
 ];
 
 function build(repos) {
-  const { recent, earlier } = selectRepos(repos, site.projects, now);
+  const { recent, earlier } = selectRepos(repos, render, now);
   const input = { site, recent, earlier, now, css: "", script: "", fonts };
   return { html: renderPage(input), llms: renderLlms(input) };
 }
@@ -65,7 +68,9 @@ test("the page has the parts that the tests of the speed budget need", () => {
   assert.match(html, /<h1 id="name">Tony Wong<\/h1>/);
   assert.equal((html.match(/rel="preload"/g) || []).length, fonts.length);
   assert.match(html, /href="https:\/\/b.example">Live site/);
+  // No script file blocks the first paint: the page asks for app.js only after the load event.
   assert.doesNotMatch(html, /<script src=/);
+  assert.match(html, /addEventListener\("load",[^<]*src:"app.js"\}\)\),900\)/);
   assert.doesNotMatch(html, /<link rel="stylesheet"/);
 });
 
@@ -97,7 +102,38 @@ test("the built page is under the first-load budget", async (t) => {
     return;
   }
   let bytes = gzipSync(html).length;
+  // The page must fit in the first TCP window, so the first paint needs one round trip.
+  assert.ok(bytes < 14 * 1024, `the gzipped page is ${bytes} bytes`);
+  bytes += gzipSync(await readFile(new URL("app.js", dist))).length;
   for (const f of fonts)
     bytes += (await stat(new URL(`fonts/${f}`, dist))).size;
   assert.ok(bytes < 100 * 1024, `first load is ${bytes} bytes`);
+});
+
+test("with the real settings, the site lists only saola and MiiToast", () => {
+  const names = [
+    "saola", "MiiToast", "saola-mac", "homebrew-saola", "kumodesu",
+    "handy-type", "NextAnime", "griffin_game", "meetily",
+  ];
+  const { recent, earlier } = selectRepos(names.map((n) => repo(n)), site.projects, now);
+  assert.deepEqual(
+    [...recent, ...earlier].map((r) => r.name).sort(),
+    ["MiiToast", "saola"],
+  );
+});
+
+test("fewer than 3 projects give cards and no carousel", () => {
+  const { html } = build([repo("one"), repo("two")]);
+  assert.match(html, /<div class="cards">/);
+  assert.doesNotMatch(html, /class="carousel"/);
+  assert.doesNotMatch(html, /id="track"/);
+  assert.doesNotMatch(html, /aria-roledescription="slide"/);
+  assert.equal((html.match(/class="slide on"/g) || []).length, 2);
+});
+
+test("3 projects give the carousel", () => {
+  const { html } = build([repo("a"), repo("b"), repo("c")]);
+  assert.match(html, /class="carousel"/);
+  assert.doesNotMatch(html, /<div class="cards">/);
+  assert.equal((html.match(/class="slide on"/g) || []).length, 1);
 });

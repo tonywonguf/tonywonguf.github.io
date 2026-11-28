@@ -259,8 +259,24 @@ body {
 }
 /* The script adds the class "js". Without the script, all slides stay fully visible.
    The text of a side slide is fully hidden, not dim, so no text has low contrast. */
-.js .slide:not(.on, :focus-within) {
-  transform: scale(0.94);
+/* With the script, the track does not scroll. The script moves each slide with a transform,
+   and the position wraps around (src/carousel.js). The body clips the slides off screen. */
+.js .track {
+  overflow: visible;
+  scroll-snap-type: none;
+  touch-action: pan-y;
+  cursor: grab;
+}
+.js .slide {
+  transition: none;
+  will-change: transform;
+}
+.drag .track {
+  cursor: grabbing;
+  user-select: none;
+}
+.drag .track a {
+  pointer-events: none;
 }
 .js .slide:not(.on, :focus-within) .cover {
   opacity: 0.45;
@@ -429,6 +445,7 @@ body {
   color: var(--accent);
 }
 .pos {
+  flex: 1;
   margin: 0;
   font: 0.875rem var(--mono);
   color: var(--muted);
@@ -436,18 +453,6 @@ body {
 }
 .pos span {
   color: var(--ink);
-}
-.bar {
-  flex: 1;
-  height: 2px;
-  background: var(--line);
-  overflow: hidden;
-}
-.bar span {
-  display: block;
-  height: 100%;
-  background: var(--accent);
-  transition: width 0.35s;
 }
 .tags {
   display: flex;
@@ -672,4 +677,74 @@ body {
   .stage {
     margin-top: -20em;
   }
+}
+
+/* Dither effects of src/site.js. Each canvas is small and the browser scales it up with sharp pixels.
+   Without the script, none of these elements exist, and the CSS covers and the text art stay. */
+.cover canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  image-rendering: pixelated;
+}
+.cover.dith::before,
+.cover.dith::after {
+  display: none;
+}
+/* The hero is a layer above the stage, so the glow can go behind the text. Only the text takes the pointer,
+   so a click on the empty part of the hero goes to the stage. */
+.hero {
+  position: relative;
+  z-index: 1;
+  pointer-events: none;
+}
+.hero-text {
+  max-width: 44rem;
+  pointer-events: auto;
+}
+.glow {
+  position: absolute;
+  z-index: -1;
+  top: -2rem;
+  left: calc(50% - 50vw);
+  width: 100vw;
+  height: calc(100% + 6rem);
+  image-rendering: pixelated;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.8s;
+}
+.glow.on {
+  opacity: 1;
+}
+.glyphs {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+.live .walker,
+.live .tree,
+.live .deer {
+  visibility: hidden;
+}
+.grain {
+  position: absolute;
+  top: -96px;
+  left: -96px;
+  -webkit-mask: linear-gradient(transparent 96px, #000 40%);
+  mask: linear-gradient(transparent 96px, #000 40%);
+  will-change: transform;
+  pointer-events: none;
+}
+.stage.play {
+  pointer-events: auto;
+  cursor: crosshair;
+}
+
+/* Fewer than 3 projects: no carousel. Each project is a card at full width. */
+.cards {
+  display: grid;
+  gap: clamp(2.5rem, 6vw, 4.5rem);
 }
